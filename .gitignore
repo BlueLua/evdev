@@ -1,0 +1,4 @@
+build/
+*.rock
+*.o
+*.so
