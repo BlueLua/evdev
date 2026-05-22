@@ -118,11 +118,6 @@ local function normalize(spec)
   return spec
 end
 
-function UInput:is_open()
-  local handle = self._core
-  return handle ~= nil and handle:is_open()
-end
-
 function UInput:close()
   if self._core then
     local ok, err = self._core:close()
@@ -141,17 +136,11 @@ function UInput:emit(type, code, value)
   return call_uinput(self, "emit", type, code, value)
 end
 
-function UInput:sync()
-  local ok, err = call_uinput(self, "sync")
-  if not ok then
-    return nil, err
-  end
-  return true
-end
-
-function UInput:info()
-  return call_uinput(self, "info")
-end
+-- stylua: ignore start
+function UInput:is_open() return self._core ~= nil and self._core:is_open() end
+function UInput:sync()    return call_uinput(self, "sync")                  end
+function UInput:info()    return call_uinput(self, "info")                  end
+-- stylua: ignore end
 
 ---@type evdev.uinput
 local M = {}
