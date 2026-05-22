@@ -172,7 +172,7 @@ describe("evdev.uinput()", function()
       local spec = normalize({ keys = {}, rels = {} })
       assert.Same({}, spec.keys)
       assert.Same({}, spec.rels)
-      assert.Same({ ecodes.EV_SYN, ecodes.EV_KEY, ecodes.EV_REL }, spec.event_types)
+      assert.Same({ ecodes.EV_SYN }, spec.event_types)
     end)
   end)
 

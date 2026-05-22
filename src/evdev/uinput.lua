@@ -106,10 +106,10 @@ local function normalize(spec)
 
   if spec.event_types == nil then
     local event_types = { ecodes.EV_SYN }
-    if spec.keys then
+    if spec.keys and #spec.keys > 0 then
       event_types[#event_types + 1] = ecodes.EV_KEY
     end
-    if spec.rels then
+    if spec.rels and #spec.rels > 0 then
       event_types[#event_types + 1] = ecodes.EV_REL
     end
     spec.event_types = event_types
