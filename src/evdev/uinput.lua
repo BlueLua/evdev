@@ -124,17 +124,13 @@ function UInput:is_open()
 end
 
 function UInput:close()
-  local core = self._core
-  if not core then
-    return true
+  if self._core then
+    local ok, err = self._core:close()
+    if not ok then
+      return nil, err
+    end
+    self._core = nil
   end
-
-  local ok, err = core:close()
-  if not ok then
-    return nil, err
-  end
-
-  self._core = nil
   return true
 end
 
