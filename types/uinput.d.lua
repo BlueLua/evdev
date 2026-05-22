@@ -46,11 +46,11 @@ function M.create(spec) end
 ---Open virtual input device handle.
 ---
 ---@class evdev.coreUInput
----@field close fun(self: evdev.coreUInput): true?, string?
----@field emit fun(self: evdev.coreUInput, type: evdev.ecodes.ev, code: integer, value: evdev.eventValue): true?, string?
----@field info fun(self: evdev.coreUInput): evdev.deviceInfo?, string?
+---@field close fun(self: evdev.coreUInput): (ok:true?, err:string?)
+---@field emit fun(self: evdev.coreUInput, type:evdev.ecodes.ev, code:integer, value:evdev.eventValue): (ok:true?, err:string?)
+---@field info fun(self: evdev.coreUInput): (info:evdev.deviceInfo?, err:string?)
 ---@field is_open fun(self: evdev.coreUInput): boolean
----@field sync fun(self: evdev.coreUInput): true?, string?
+---@field sync fun(self: evdev.coreUInput): (ok:true?, err:string?)
 
 ---
 ---Open virtual input device handle.
