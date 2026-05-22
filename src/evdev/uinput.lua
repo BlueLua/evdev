@@ -6,19 +6,22 @@ local ecodes = evdev.ecodes
 local util = evdev._util
 
 local create_uinput = evdev._core.create_uinput
-local tbl_copy = util.copy
-local tbl_keys = util.keys
+local tbl_copy = util.tbl_copy
+local tbl_keys = util.tbl_keys
 local validate = util.validate
 local fmt = string.format
-
----@type evdev.uinput
-local M = {}
 
 ---@type evdev.UInput
 local UInput = {}
 UInput.__index = UInput
 
-local closed_err = "uinput device is closed"
+local function call_uinput(ui, fname, ...)
+  local core = ui._core
+  if not core then
+    return nil, "uinput device is closed"
+  end
+  return core[fname](core, ...)
+end
 
 local function is_metacode(name)
   return name:match("_MAX$")
@@ -78,7 +81,6 @@ local function normalize_code_list(spec, name, expected)
   for i = #positions, 1, -1 do
     table.remove(filtered, positions[i])
   end
-
   spec[name] = filtered
 end
 
@@ -99,15 +101,15 @@ local function normalize(spec)
   normalize_code_list(spec, "rels", "REL_*")
   normalize_code_list(spec, "event_types", "EV_*")
 
-  spec.keys = spec.keys == nil and tbl_keys(allowed.keys) or spec.keys
-  spec.rels = spec.rels == nil and tbl_keys(allowed.rels) or spec.rels
+  spec.keys = spec.keys and spec.keys or tbl_keys(allowed.keys)
+  spec.rels = spec.rels and spec.rels or tbl_keys(allowed.rels)
 
   if spec.event_types == nil then
     local event_types = { ecodes.EV_SYN }
-    if spec.keys ~= nil then
+    if spec.keys then
       event_types[#event_types + 1] = ecodes.EV_KEY
     end
-    if spec.rels ~= nil then
+    if spec.rels then
       event_types[#event_types + 1] = ecodes.EV_REL
     end
     spec.event_types = event_types
@@ -116,25 +118,18 @@ local function normalize(spec)
   return spec
 end
 
-function M.create(spec)
-  local ui, err = create_uinput(normalize(spec))
-  if not ui then
-    return nil, err
-  end
-  return setmetatable({ _core = ui }, UInput)
-end
-
 function UInput:is_open()
   local handle = self._core
   return handle ~= nil and handle:is_open()
 end
 
 function UInput:close()
-  if not self:is_open() then
+  local core = self._core
+  if not core then
     return true
   end
 
-  local ok, err = self._core:close()
+  local ok, err = core:close()
   if not ok then
     return nil, err
   end
@@ -143,41 +138,34 @@ function UInput:close()
   return true
 end
 
-function UInput:emit(etype, ecode, evalue)
-  validate("type", etype, "number")
-  validate("code", ecode, "number")
-  validate("value", evalue, "number")
-
-  if not self:is_open() then
-    return nil, closed_err
-  end
-
-  local ok, emit_err = self._core:emit(etype, ecode, evalue)
-  if not ok then
-    return nil, emit_err
-  end
-
-  return true
+function UInput:emit(type, code, value)
+  validate("type", type, "number")
+  validate("code", code, "number")
+  validate("value", value, "number")
+  return call_uinput(self, "emit", type, code, value)
 end
 
 function UInput:sync()
-  if not self:is_open() then
-    return nil, closed_err
+  local ok, err = call_uinput(self, "sync")
+  if not ok then
+    return nil, err
   end
-
-  local ok, sync_err = self._core:sync()
-  if ok == nil then
-    return nil, sync_err
-  end
-
   return true
 end
 
 function UInput:info()
-  if not self:is_open() then
-    return nil, closed_err
+  return call_uinput(self, "info")
+end
+
+---@type evdev.uinput
+local M = {}
+
+function M.create(spec)
+  local ui, err = create_uinput(normalize(spec))
+  if not ui then
+    return nil, err
   end
-  return self._core:info()
+  return setmetatable({ _core = ui }, UInput)
 end
 
 if _TEST then
