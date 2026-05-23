@@ -58,6 +58,24 @@ local function collect_codes()
   end
 end
 
+local function is_repeatable_key(code)
+  for name, c in pairs(ecodes) do
+    if c == code and name:sub(1, 4) == "KEY_" and not is_metacode(name) then
+      return true
+    end
+  end
+  return false
+end
+
+local function has_repeatable_key(keys)
+  for _, code in ipairs(keys or {}) do
+    if is_repeatable_key(code) then
+      return true
+    end
+  end
+  return false
+end
+
 ---@type fun(spec:evdev.uinputSpec,name:string,expected:string)
 local function normalize_code_list(spec, name, expected)
   local values = spec[name]
@@ -107,12 +125,13 @@ local function normalize(spec)
 
   if spec.event_types == nil then
     local event_types = { ecodes.EV_SYN }
-    if spec.keys and #spec.keys > 0 then
-      event_types[#event_types + 1] = ecodes.EV_KEY
-    end
-    if spec.rels and #spec.rels > 0 then
-      event_types[#event_types + 1] = ecodes.EV_REL
-    end
+    local has_keys = spec.keys and #spec.keys > 0
+    local has_rels = spec.rels and #spec.rels > 0
+
+    event_types[#event_types + 1] = has_keys and ecodes.EV_KEY or nil
+    event_types[#event_types + 1] = has_rels and ecodes.EV_REL or nil
+    event_types[#event_types + 1] = has_repeatable_key(spec.keys) and ecodes.EV_REP or nil
+
     spec.event_types = event_types
   end
 
