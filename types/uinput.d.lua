@@ -8,7 +8,7 @@
 ---@field path? string uinput control node (default: `"/dev/uinput"`). Kernel assigns `/dev/input/eventX`.
 ---@field keys? evdev.ecodes.key[] Keys/buttons to expose. Defaults to all real `KEY_*` and `BTN_*` codes when omitted.
 ---@field rels? evdev.ecodes.rel[] Relative axes to expose. Defaults to all real `REL_*` codes when omitted.
----@field event_types? evdev.ecodes.ev[] Event types to enable. Defaults to `EV_SYN` plus `EV_KEY` and/or `EV_REL` based on `keys` and `rels`.
+---@field event_types? evdev.ecodes.ev[] Event types to enable. Defaults to `EV_SYN`, plus `EV_KEY`/`EV_REP` for keyboard keys and `EV_REL` for relative axes.
 ---@field bustype? integer Linux bus type (default: `BUS_USB` / 3).
 ---@field vendor? integer Vendor ID (default: `0x1209`).
 ---@field product? integer Product ID (default: `0xE7DE`).
