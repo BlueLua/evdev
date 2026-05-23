@@ -6,7 +6,7 @@
 ---@class evdev.uinputSpec
 ---@field name? string Device name shown by the kernel (default: `"Lua evdev virtual keyboard"`).
 ---@field path? string uinput control node (default: `"/dev/uinput"`). Kernel assigns `/dev/input/eventX`.
----@field keys? evdev.ecodes.key[] Keys/buttons to expose. Defaults to all real `KEY_*` and `BTN_*` codes when omitted.
+---@field keys? (evdev.ecodes.key|evdev.ecodes.btn)[] Keys/buttons to expose. Defaults to all real `KEY_*` and `BTN_*` codes when omitted.
 ---@field rels? evdev.ecodes.rel[] Relative axes to expose. Defaults to all real `REL_*` codes when omitted.
 ---@field event_types? evdev.ecodes.ev[] Event types to enable. Defaults to `EV_SYN`, plus `EV_KEY`/`EV_REP` for keyboard keys and `EV_REL` for relative axes.
 ---@field bustype? integer Linux bus type (default: `BUS_USB` / 3).
