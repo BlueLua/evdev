@@ -15,6 +15,7 @@ local fmt = string.format
 local UInput = {}
 UInput.__index = UInput
 
+---@type fun(dev:evdev.UInput, fname:string, ...):...
 local function call_uinput(ui, fname, ...)
   local core = ui._core
   if not core then
