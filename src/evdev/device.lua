@@ -56,10 +56,17 @@ function Device:events()
   end
 end
 
+function Device:get_repeat()
+  local delay, period = call_device(self, "get_repeat")
+  if delay == nil then
+    return nil, nil, period
+  end
+  return delay, period
+end
+
 -- stylua: ignore start
 function Device:is_open()        return self._core ~= nil and self._core:is_open() end
 function Device:set_repeat(d, p) return call_device(self, "set_repeat", d, p)      end
-function Device:get_repeat()     return call_device(self, "get_repeat")            end
 function Device:ungrab()         return call_device(self, "ungrab")                end
 function Device:grab()           return call_device(self, "grab")                  end
 function Device:info()           return call_device(self, "info")                  end
