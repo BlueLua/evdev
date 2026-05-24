@@ -100,6 +100,12 @@ static int evdev_device_grab(lua_State *L) {
   }
 
   if (ioctl(device->fd, EVIOCGRAB, 1) < 0) {
+    if (errno == EBUSY) {
+      lua_pushnil(L);
+      lua_pushfstring(L, "grab %s: device is already grabbed",
+                      device->path != NULL ? device->path : "<unknown>");
+      return 2;
+    }
     return evdev_push_errno(L, "grab", device->path);
   }
 
@@ -117,6 +123,13 @@ static int evdev_device_ungrab(lua_State *L) {
     return err_result;
   }
 
+  if (!device->grabbed) {
+    lua_pushnil(L);
+    lua_pushfstring(L, "ungrab %s: device is not grabbed",
+                    device->path != NULL ? device->path : "<unknown>");
+    return 2;
+  }
+
   if (ioctl(device->fd, EVIOCGRAB, 0) < 0) {
     return evdev_push_errno(L, "ungrab", device->path);
   }
@@ -124,6 +137,14 @@ static int evdev_device_ungrab(lua_State *L) {
   device->grabbed = 0;
   lua_pushboolean(L, 1);
   return 1;
+}
+
+static int evdev_push_repeat_unsupported(lua_State *L, const char *action,
+                                         const char *path) {
+  lua_pushnil(L);
+  lua_pushfstring(L, "%s %s: device does not support repeat settings", action,
+                  path != NULL ? path : "<unknown>");
+  return 2;
 }
 
 static int evdev_device_set_repeat(lua_State *L) {
@@ -145,6 +166,9 @@ static int evdev_device_set_repeat(lua_State *L) {
   repeat[1] = (unsigned int)period;
 
   if (ioctl(device->fd, EVIOCSREP, repeat) < 0) {
+    if (errno == ENOSYS || errno == ENOTTY || errno == EINVAL) {
+      return evdev_push_repeat_unsupported(L, "set repeat", device->path);
+    }
     return evdev_push_errno(L, "set repeat", device->path);
   }
 
@@ -163,6 +187,9 @@ static int evdev_device_get_repeat(lua_State *L) {
   }
 
   if (ioctl(device->fd, EVIOCGREP, repeat) < 0) {
+    if (errno == ENOSYS || errno == ENOTTY || errno == EINVAL) {
+      return evdev_push_repeat_unsupported(L, "get repeat", device->path);
+    }
     return evdev_push_errno(L, "get repeat", device->path);
   }
 
