@@ -173,6 +173,7 @@ function M.create(spec)
   return setmetatable({ _core = ui }, UInput)
 end
 
+---@diagnostic disable-next-line: undefined-global
 if _TEST then
   M._normalize = normalize
 end
