@@ -92,8 +92,11 @@ function UInput:is_open() end
 ---Return virtual device metadata.
 ---
 ---```lua
----local info = assert(ui:info())
----print(info.path)
+---local UInput = evdev.uinput.create
+---local ui = assert(UInput())
+---local dev = assert(ui:info())
+---
+---print(dev.path)
 ---```
 ---
 ---@return evdev.deviceInfo? info Virtual device metadata.
