@@ -166,6 +166,7 @@ function Device:grab() end
 ---```lua
 ---local Device = evdev.device.open
 ---local dev = assert(Device("/dev/input/eventX"))
+---assert(dev:grap())
 ---assert(dev:ungrab())
 ---```
 ---
