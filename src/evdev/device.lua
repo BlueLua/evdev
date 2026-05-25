@@ -41,18 +41,16 @@ function Device:events()
   local poll = self.poll
   local read = self.read
   return function()
-    while true do
-      local ready, poll_err = poll(self)
-      if not ready then
-        error(poll_err, 2)
-      end
-
-      local event, read_err = read(self)
-      if not event then
-        error(read_err, 2)
-      end
-      return event
+    local ready, poll_err = poll(self)
+    if not ready then
+      error(poll_err, 2)
     end
+
+    local event, read_err = read(self)
+    if not event then
+      error(read_err, 2)
+    end
+    return event
   end
 end
 
