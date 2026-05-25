@@ -10,6 +10,13 @@ function M.tbl_copy(input)
   return output
 end
 
+function M.tbl_update(dst, src)
+  for k, v in pairs(src) do
+    dst[k] = v
+  end
+  return dst
+end
+
 function M.tbl_keys(t)
   local keys = {}
   for k in pairs(t) do
