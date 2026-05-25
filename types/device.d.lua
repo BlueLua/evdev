@@ -12,12 +12,12 @@
 ---@field usec? integer
 
 ---
----Device metadata returned by discovery APIs.
+---Input device metadata.
 ---
 ---@class evdev.deviceInfo
 ---@field bustype integer Bus type from the kernel input ID.
----@field by_id? string[] Symlink aliases under `/dev/input/by-id`.
----@field by_path? string[] Symlink aliases under `/dev/input/by-path`.
+---@field by_id? string[] Symlink aliases under `/dev/input/by-id`, when available.
+---@field by_path? string[] Symlink aliases under `/dev/input/by-path`, when available.
 ---@field name? string Device name reported by the kernel.
 ---@field path string Device node path.
 ---@field phys? string Physical device path, when available.
