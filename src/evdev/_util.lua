@@ -24,7 +24,7 @@ function M.validate(lbl, v, tp, optional)
   if tv == tp or (optional and v == nil) then
     return v
   end
-  error(fmt("%s: (%s expected, got %s)", lbl, tp, tv), 2)
+  error(fmt("%s: (%s expected, got %s)", lbl, tp, tv), 3)
 end
 
 return M
