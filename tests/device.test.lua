@@ -43,6 +43,14 @@ describe("evdev.device", function()
       assert.True(dev:close())
     end)
 
+    it("returns true for device instances", function()
+      local dev = assert(Device(kb_path))
+      assert.True(evdev.device.is_device(dev))
+      assert.False(evdev.device.is_device({}))
+      assert.False(evdev.device.is_device(false))
+      assert.True(dev:close())
+    end)
+
     it("errors on non-string path", function()
       assert.Error(function()
         Device(1) ---@diagnostic disable-line

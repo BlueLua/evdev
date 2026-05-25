@@ -76,6 +76,10 @@ function Device:flush()          return call_device(self, "flush")              
 ---@type evdev.device
 local M = {}
 
+function M.is_device(dev)
+  return getmetatable(dev) == Device
+end
+
 function M.open(path)
   validate("path", path, "string")
   local dev, err = open_device(path)

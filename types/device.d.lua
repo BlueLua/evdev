@@ -268,6 +268,22 @@ function Device:flush() end
 local M = {}
 
 ---
+---Return whether a value is an `evdev.Device` instance.
+---
+---```lua
+---local Device = evdev.device.open
+---local is_device = evdev.device.is_device
+---
+---local dev = assert(Device("/dev/input/eventX"))
+---print(is_device(dev)) --> true
+---print(is_device({}))  --> false
+---```
+---
+---@param value any
+---@return boolean
+function M.is_device(value) end
+
+---
 ---Open an input device by path.
 ---
 ---```lua
