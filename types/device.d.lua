@@ -189,7 +189,7 @@ function Device:ungrab() end
 ---while true do
 ---  if assert(dev:poll()) then
 ---    local e = assert(dev:read())
----    if e.type == e.EV_KEY then
+---    if e.type == ecodes.EV_KEY then
 ---      print(e.code, e.value)
 ---    end
 ---  end
@@ -209,7 +209,7 @@ function Device:poll() end
 ---local dev = assert(Device("/dev/input/eventX"))
 ---
 ---for e in dev:events() do
----  if e.type == e.EV_KEY then
+---  if e.type == ecodes.EV_KEY then
 ---    print(e.code, e.value)
 ---  end
 ---end
@@ -229,7 +229,7 @@ function Device:events() end
 ---while true do
 ---  if assert(dev:poll()) then
 ---    local e = assert(dev:read())
----    if e.type == e.EV_KEY then
+---    if e.type == ecodes.EV_KEY then
 ---      print(e.code, e.value)
 ---    end
 ---  end
