@@ -1,27 +1,46 @@
----@diagnostic disable: inject-field
-
 local evdev = require "evdev"
 
 local ecodes = evdev.ecodes
 local util = evdev._util
 
 local create_uinput = evdev._core.create_uinput
+local find_device = evdev.devices.find
 local tbl_copy = util.tbl_copy
 local tbl_keys = util.tbl_keys
+local tbl_update = util.tbl_update
 local validate = util.validate
 local fmt = string.format
 
 ---@type evdev.UInput
+---@diagnostic disable-next-line: missing-fields
 local UInput = {}
-UInput.__index = UInput
 
 ---@type fun(dev:evdev.UInput, fname:string, ...):...
 local function call_uinput(ui, fname, ...)
-  local core = ui._core
+  local core = rawget(ui, "_core")
   if not core then
     return nil, "uinput device is closed"
   end
   return core[fname](core, ...)
+end
+
+function UInput:__index(k)
+  local v = rawget(UInput, k)
+  if v then
+    return v
+  end
+
+  if not rawget(self, "_metadata") then
+    local md, err = call_uinput(self, "info")
+    if not md then
+      error(err, 3)
+    end
+
+    tbl_update(self, find_device(md.path))
+    self._metadata = md
+  end
+
+  return rawget(self, k)
 end
 
 local function is_metacode(name)
@@ -139,8 +158,9 @@ local function normalize(spec)
 end
 
 function UInput:close()
-  if self._core then
-    local ok, err = self._core:close()
+  local core = rawget(self, "_core")
+  if core then
+    local ok, err = core:close()
     if not ok then
       return nil, err
     end
@@ -156,11 +176,14 @@ function UInput:emit(type, code, value)
   return call_uinput(self, "emit", type, code, value)
 end
 
--- stylua: ignore start
-function UInput:is_open() return self._core ~= nil and self._core:is_open() end
-function UInput:sync()    return call_uinput(self, "sync")                  end
-function UInput:info()    return call_uinput(self, "info")                  end
--- stylua: ignore end
+function UInput:is_open()
+  local core = rawget(self, "_core")
+  return core ~= nil and core:is_open()
+end
+
+function UInput:sync()
+  return call_uinput(self, "sync")
+end
 
 ---@type evdev.uinput
 local M = {}
@@ -175,6 +198,7 @@ end
 
 ---@diagnostic disable-next-line: undefined-global
 if _TEST then
+  ---@diagnostic disable-next-line: inject-field
   M._normalize = normalize
 end
 

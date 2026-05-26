@@ -32,8 +32,7 @@ local M = {}
 ---ui:emit(evdev.ecodes.EV_KEY, evdev.ecodes.KEY_A, 0)
 ---ui:sync()
 ---
----local info = assert(ui:info())
----print(info.path)
+---print(ui.path)
 ---```
 ---
 ---@param spec? evdev.uinputSpec Virtual device configuration.
@@ -55,8 +54,10 @@ function M.create(spec) end
 ---
 ---Open virtual input device handle.
 ---
----@class evdev.UInput
+---@class evdev.UInput:evdev.deviceInfo
+---@field __index fun(dev:self, k:string):any
 ---@field _core? evdev.coreUInput
+---@field _metadata? evdev.deviceInfo
 local UInput = {}
 
 ---
@@ -87,22 +88,6 @@ function UInput:close() end
 ---@return boolean is_open `true` when the virtual device is still open.
 ---@nodiscard
 function UInput:is_open() end
-
----
----Return virtual device metadata.
----
----```lua
----local UInput = evdev.uinput.create
----local ui = assert(UInput())
----local dev = assert(ui:info())
----
----print(dev.path)
----```
----
----@return evdev.deviceInfo? info Virtual device metadata.
----@return string? err Error message on failure.
----@nodiscard
-function UInput:info() end
 
 ---
 ---Emit one raw input event.

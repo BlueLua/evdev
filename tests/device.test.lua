@@ -11,8 +11,7 @@ local sleep = system.sleep
 local fmt = string.format
 
 describe("evdev.device", function()
-  local mouse, mouse_path
-  local kb, kb_path
+  local mouse, kb
 
   setup(function()
     kb = assert(UInput({ keys = { ecodes.KEY_ENTER, ecodes.KEY_F24, ecodes.KEY_F23 } }))
@@ -20,11 +19,7 @@ describe("evdev.device", function()
       keys = { ecodes.BTN_LEFT, ecodes.BTN_RIGHT, ecodes.BTN_MIDDLE },
       rels = { ecodes.REL_X, ecodes.REL_Y, ecodes.REL_WHEEL },
     }))
-
     sleep(0.1)
-
-    mouse_path = assert(mouse:info()).path
-    kb_path = assert(kb:info()).path
   end)
 
   teardown(function()
@@ -38,13 +33,13 @@ describe("evdev.device", function()
 
   describe("open()", function()
     it("opens a device by path", function()
-      local dev = assert(Device(kb_path))
+      local dev = assert(Device(kb.path))
       assert.True(dev:is_open())
       assert.True(dev:close())
     end)
 
     it("returns true for device instances", function()
-      local dev = assert(Device(kb_path))
+      local dev = assert(Device(kb.path))
       assert.True(evdev.device.is_device(dev))
       assert.False(evdev.device.is_device({}))
       assert.False(evdev.device.is_device(false))
@@ -66,13 +61,13 @@ describe("evdev.device", function()
 
   describe("close()", function()
     it("closes the device cleanly", function()
-      local dev = Device(kb_path)
+      local dev = Device(kb.path)
       assert.True(dev:close())
       assert.False(dev:is_open())
     end)
 
     it("returns true when called multiple times", function()
-      local dev = Device(kb_path)
+      local dev = Device(kb.path)
 
       assert.True(dev:is_open())
       assert.True(dev:close())
@@ -87,14 +82,14 @@ describe("evdev.device", function()
 
   describe("metadata fields", function()
     it("loads metadata fields", function()
-      local dev = Device(kb_path)
-      assert.Equal(kb_path, dev.path)
+      local dev = Device(kb.path)
+      assert.Equal(kb.path, dev.path)
       assert.String(dev.name)
       assert.True(dev:close())
     end)
 
     it("stays cached after close", function()
-      local dev = Device(kb_path)
+      local dev = Device(kb.path)
       local path = dev.path
       local name = dev.name
       dev:close()
@@ -106,7 +101,7 @@ describe("evdev.device", function()
 
   describe("fd()", function()
     it("returns the file descriptor", function()
-      local dev = Device(mouse_path)
+      local dev = Device(mouse.path)
       local fd = dev:fd()
       assert.Number(fd)
       assert.True(fd >= 0)
@@ -114,7 +109,7 @@ describe("evdev.device", function()
     end)
 
     it("returns nil after close", function()
-      local dev = Device(mouse_path)
+      local dev = Device(mouse.path)
       assert.True(dev:close())
       assert.Nil(dev:fd())
     end)
@@ -122,7 +117,7 @@ describe("evdev.device", function()
 
   describe("get_repeat()", function()
     it("returns repeat settings for repeat-capable devices", function()
-      local dev = Device(kb_path)
+      local dev = Device(kb.path)
       local delay, period, err = dev:get_repeat()
       assert.Number(delay)
       assert.Number(period)
@@ -131,18 +126,18 @@ describe("evdev.device", function()
     end)
 
     it("returns an unsupported error for non-repeat devices", function()
-      local dev = Device(mouse_path)
+      local dev = Device(mouse.path)
       local delay, period, err = dev:get_repeat()
       assert.Nil(delay)
       assert.Nil(period)
-      assert.Equal(fmt("get repeat %s: device does not support repeat settings", mouse_path), err)
+      assert.Equal(fmt("get repeat %s: device does not support repeat settings", mouse.path), err)
       assert.True(dev:close())
     end)
   end)
 
   describe("set_repeat()", function()
     it("updates repeat settings for repeat-capable devices", function()
-      local dev = Device(kb_path)
+      local dev = Device(kb.path)
       local delay, period, err = dev:get_repeat()
 
       assert.Number(delay)
@@ -157,53 +152,53 @@ describe("evdev.device", function()
     end)
 
     it("returns an unsupported error for non-repeat devices", function()
-      local dev = Device(mouse_path)
+      local dev = Device(mouse.path)
       local ok, err = dev:set_repeat(300, 40)
       assert.Nil(ok)
-      assert.Equal(fmt("set repeat %s: device does not support repeat settings", mouse_path), err)
+      assert.Equal(fmt("set repeat %s: device does not support repeat settings", mouse.path), err)
       assert.True(dev:close())
     end)
   end)
 
   describe("grab()", function()
     it("grabs the device", function()
-      local dev = Device(kb_path)
+      local dev = Device(kb.path)
       assert.True(dev:grab())
       assert.True(dev:close())
     end)
 
     it("errors when the device is already grabbed", function()
-      local dev = Device(kb_path)
+      local dev = Device(kb.path)
       assert.True(dev:grab())
       dev:grab()
 
       local ok, err = dev:grab()
       assert.Nil(ok)
-      assert.Equal(fmt("grab %s: device is already grabbed", kb_path), err)
+      assert.Equal(fmt("grab %s: device is already grabbed", kb.path), err)
       assert.True(dev:close())
     end)
   end)
 
   describe("ungrab() ", function()
     it("releases the device grab", function()
-      local dev = Device(kb_path)
+      local dev = Device(kb.path)
       assert.True(dev:grab())
       assert.True(dev:ungrab())
       assert.True(dev:close())
     end)
 
     it("errors when the device is not grabbed", function()
-      local dev = Device(kb_path)
+      local dev = Device(kb.path)
       local ok, err = dev:ungrab()
       assert.Nil(ok)
-      assert.Equal(fmt("ungrab %s: device is not grabbed", kb_path), err)
+      assert.Equal(fmt("ungrab %s: device is not grabbed", kb.path), err)
       assert.True(dev:close())
     end)
   end)
 
   describe("poll()", function()
     it("returns true when input is ready", function()
-      local dev = Device(kb_path)
+      local dev = Device(kb.path)
       assert.True(kb:emit(ecodes.EV_KEY, ecodes.KEY_F24, 1))
       assert.True(kb:sync())
       assert.True(dev:poll())
@@ -211,7 +206,7 @@ describe("evdev.device", function()
     end)
 
     it("returns a closed-device error after close", function()
-      local dev = Device(kb_path)
+      local dev = Device(kb.path)
       assert.True(dev:close())
 
       local ready, err = dev:poll()
@@ -222,7 +217,7 @@ describe("evdev.device", function()
 
   describe("flush()", function()
     it("drains queued events", function()
-      local dev = Device(kb_path)
+      local dev = Device(kb.path)
 
       assert.True(kb:emit(ecodes.EV_KEY, ecodes.KEY_F24, 1))
       assert.True(kb:sync())
@@ -242,7 +237,7 @@ describe("evdev.device", function()
     end)
 
     it("returns a closed-device error after close", function()
-      local dev = Device(kb_path)
+      local dev = Device(kb.path)
       assert.True(dev:close())
 
       local count, err = dev:flush()
@@ -256,7 +251,7 @@ describe("evdev.device", function()
       local ui = assert(UInput({ keys = { ecodes.KEY_F24 } }))
       sleep(0.1)
 
-      local path = assert(ui:info()).path
+      local path = ui.path
       local dev = assert(Device(path))
 
       assert.True(ui:emit(ecodes.EV_KEY, ecodes.KEY_F24, 1))
@@ -276,7 +271,7 @@ describe("evdev.device", function()
     end)
 
     it("returns nil when no event is queued", function()
-      local dev = Device(kb_path)
+      local dev = Device(kb.path)
       local event, err = dev:read()
       assert.Nil(event)
       assert.Nil(err)
@@ -284,7 +279,7 @@ describe("evdev.device", function()
     end)
 
     it("returns a closed-device error after close", function()
-      local dev = Device(kb_path)
+      local dev = Device(kb.path)
       assert.True(dev:close())
 
       local event, err = dev:read()
@@ -309,7 +304,7 @@ describe("evdev.device", function()
       local ui = assert(UInput({ keys = { ecodes.KEY_F24 } }))
       sleep(0.1)
 
-      local path = assert(ui:info()).path
+      local path = ui.path
       local dev = assert(Device(path))
 
       assert.True(ui:emit(ecodes.EV_KEY, ecodes.KEY_F24, 1))
@@ -330,7 +325,7 @@ describe("evdev.device", function()
       local ui = assert(UInput({ keys = { ecodes.KEY_F24, ecodes.KEY_F23 } }))
       sleep(0.1)
 
-      local dev = assert(Device(assert(ui:info()).path))
+      local dev = assert(Device(ui.path))
 
       assert.True(ui:emit(ecodes.EV_KEY, ecodes.KEY_F24, 1))
       assert.True(ui:sync())
@@ -353,7 +348,7 @@ describe("evdev.device", function()
     end)
 
     it("raises a closed-device error after close", function()
-      local dev = Device(kb_path)
+      local dev = Device(kb.path)
       assert.True(dev:close())
       assert.Error(function()
         dev:events()()

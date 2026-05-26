@@ -23,19 +23,13 @@ end
 describe("evdev.devices", function()
   local devs
   local kb1, kb2, mouse
-  local kb1_info, kb2_info, mouse_info
 
   setup(function()
     devs = assert(evdev.devices.list_devices())
     kb1 = assert(UInput({ name = "evdev test keyboard" }))
     kb2 = assert(UInput({ name = "evdev test keyboard" }))
     mouse = assert(UInput({ name = "evdev test mouse" }))
-
     sleep(0.1)
-
-    kb1_info = assert(kb1:info())
-    kb2_info = assert(kb2:info())
-    mouse_info = assert(mouse:info())
   end)
 
   -- stylua: ignore
@@ -72,9 +66,9 @@ describe("evdev.devices", function()
       for _, info in ipairs(devs) do
         seen[info.path] = true
       end
-      assert.True(seen[kb1_info.path])
-      assert.True(seen[kb2_info.path])
-      assert.True(seen[mouse_info.path])
+      assert.True(seen[kb1.path])
+      assert.True(seen[kb2.path])
+      assert.True(seen[mouse.path])
     end)
 
     it("attaches alias lists when present", function()
@@ -110,9 +104,9 @@ describe("evdev.devices", function()
     end)
 
     it("finds a device by path", function()
-      local dev = find(kb1_info.path)
+      local dev = find(kb1.path)
       assert.Table(dev) ---@cast dev -?
-      assert.Equal(kb1_info.path, dev.path)
+      assert.Equal(kb1.path, dev.path)
     end)
 
     it("finds a device by name", function()
@@ -160,10 +154,10 @@ describe("evdev.devices", function()
     end)
 
     it("finds a device by path", function()
-      local dev = find_all(kb1_info.path)
+      local dev = find_all(kb1.path)
       assert.Table(dev) ---@cast dev -?
       assert.Equal(1, #dev)
-      assert.Equal(kb1_info.path, dev[1].path)
+      assert.Equal(kb1.path, dev[1].path)
     end)
 
     it("finds all devices by shared name", function()
@@ -203,8 +197,8 @@ describe("evdev.devices", function()
     local device_info = evdev.devices.device_info
 
     it("returns device metadata", function()
-      local info = assert(device_info(mouse_info.path))
-      assert.Equal(mouse_info.path, info.path)
+      local info = assert(device_info(mouse.path))
+      assert.Equal(mouse.path, info.path)
       assert.Equal("evdev test mouse", info.name)
     end)
 
