@@ -35,15 +35,16 @@
 ---@field flush fun(self: evdev.coreDevice): (count:integer?, err:string?)
 ---@field get_repeat fun(self: evdev.coreDevice): (delay:integer?, period:integer?, err:string?)
 ---@field grab fun(self: evdev.coreDevice): (ok:true?, err:string?)
----@field info fun(self: evdev.coreDevice): (info:evdev.deviceInfo?, err:string?)
 ---@field is_open fun(self: evdev.coreDevice): boolean
 ---@field poll fun(self: evdev.coreDevice): (ready:boolean?, err:string?)
 ---@field read fun(self: evdev.coreDevice): (event:evdev.event?, err:string?)
 ---@field set_repeat fun(self: evdev.coreDevice, delay:integer, period:integer): (ok:true?, err:string?)
 ---@field ungrab fun(self: evdev.coreDevice): (ok:true?, err:string?)
 
----@class evdev.Device
+---@class evdev.Device:evdev.deviceInfo
+---@field __index fun(dev:self, k:string):any
 ---@field _core? evdev.coreDevice
+---@field _metadata? evdev.deviceInfo
 local Device = {}
 
 ---
@@ -78,23 +79,6 @@ function Device:close() end
 ---@nodiscard
 function Device:is_open() end
 
----
----Return device metadata from the kernel.
----
----```lua
----local Device = evdev.device.open
----local dev = assert(Device("/dev/input/eventX"))
----
----local info = assert(dev:info())
----print(info.name)
----print(info.path)
----```
----
----@return evdev.deviceInfo? info Device metadata.
----@return string? err Error message on failure.
-function Device:info() end
-
----
 ---Return the current auto-repeat delay and period in milliseconds.
 ---
 ---```lua

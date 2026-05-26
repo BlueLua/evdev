@@ -85,22 +85,22 @@ describe("evdev.device", function()
     end)
   end)
 
-  describe("info()", function()
-    it("returns info", function()
+  describe("metadata fields", function()
+    it("loads metadata fields", function()
       local dev = Device(kb_path)
-      local info = dev:info()
-      assert.Table(info)
-      assert.Equal(kb_path, info.path)
+      assert.Equal(kb_path, dev.path)
+      assert.String(dev.name)
       assert.True(dev:close())
     end)
 
-    it("returns a closed-device error after close", function()
+    it("stays cached after close", function()
       local dev = Device(kb_path)
+      local path = dev.path
+      local name = dev.name
       dev:close()
 
-      local info, err = dev:info()
-      assert.Nil(info)
-      assert.Equal("device is closed", err)
+      assert.Equal(path, dev.path)
+      assert.Equal(name, dev.name)
     end)
   end)
 
