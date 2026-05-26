@@ -29,6 +29,7 @@ build = {
     ["evdev.device"] = "src/evdev/device.lua",
     ["evdev.devices"] = "src/evdev/devices.lua",
     ["evdev.ecodes"] = "src/evdev/ecodes.lua",
+    ["evdev.events"] = "src/evdev/events.lua",
     ["evdev.selector"] = "src/evdev/selector.lua",
     ["evdev.uinput"] = "src/evdev/uinput.lua",
     ["evdev._core"] = {
