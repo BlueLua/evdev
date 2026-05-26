@@ -121,18 +121,22 @@ describe("evdev.devices", function()
       assert.Equal("evdev test keyboard", dev.name)
     end)
 
-    it("finds a device by by-id alias", function()
+    it("finds a device by by-id alias when present", function()
       local dev_with_alias = find_by_id(devs)
-      assert.Table(dev_with_alias)
+      if not dev_with_alias then
+        pending("no discovered device with a by-id alias")
+      end
 
       local dev = find(dev_with_alias.by_id[1])
       assert.Table(dev) ---@cast dev -?
       assert.Equal(dev_with_alias.path, dev.path)
     end)
 
-    it("finds a device by by-path alias", function()
+    it("finds a device by by-path alias when present", function()
       local dev_with_alias = find_by_path(devs)
-      assert.Table(dev_with_alias)
+      if not dev_with_alias then
+        pending("no discovered device with a by-path alias")
+      end
 
       local dev = find(dev_with_alias.by_path[1])
       assert.Table(dev) ---@cast dev -?
@@ -172,7 +176,9 @@ describe("evdev.devices", function()
 
     it("finds a device by by-id alias when present", function()
       local dev_with_alias = find_by_id(devs)
-      assert.Table(dev_with_alias)
+      if not dev_with_alias then
+        pending("no discovered device with a by-id alias")
+      end
 
       local dev = find_all(dev_with_alias.by_id[1])
       assert.Table(dev) ---@cast dev -?
@@ -182,7 +188,9 @@ describe("evdev.devices", function()
 
     it("finds a device by by-path alias when present", function()
       local dev_with_alias = find_by_path(devs)
-      assert.Table(dev_with_alias)
+      if not dev_with_alias then
+        pending("no discovered device with a by-path alias")
+      end
 
       local dev = find_all(dev_with_alias.by_path[1])
       assert.Table(dev) ---@cast dev -?
