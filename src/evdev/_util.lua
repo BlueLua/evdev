@@ -17,6 +17,14 @@ function M.tbl_update(dst, src)
   return dst
 end
 
+function M.tbl_find(t, v)
+  for i, value in ipairs(t) do
+    if value == v then
+      return i
+    end
+  end
+end
+
 function M.tbl_keys(t)
   local keys = {}
   for k in pairs(t) do
