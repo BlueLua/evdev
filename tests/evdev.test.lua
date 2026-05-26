@@ -7,6 +7,7 @@ describe("evdev module", function()
     assert.is_table(evdev.device)
     assert.is_table(evdev.uinput)
     assert.is_table(evdev.ecodes)
+    assert.is_table(evdev.events)
     assert.is_table(evdev.selector)
 
     assert.is_function(evdev.devices.list_devices)

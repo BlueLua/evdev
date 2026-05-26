@@ -13,6 +13,7 @@
 ---@field device evdev.device
 ---@field devices evdev.devices
 ---@field ecodes evdev.ecodes
+---@field events evdev.events
 ---@field selector evdev.selector
 ---@field uinput evdev.uinput
 return {
