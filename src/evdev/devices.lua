@@ -12,9 +12,9 @@ local M = {
   device_info = core.device_info,
 }
 
----@type fun(devs:evdev.deviceInfo[], paths:table<string,evdev.deviceInfo>, field:"by_id"|"by_path")
+---@type fun(devs:evdev.deviceInfo[], paths:table<string,evdev.deviceInfo>, field:"id_aliases"|"path_aliases")
 local function attach_alias(devs, paths, field)
-  local dir = "/dev/input/" .. (field == "by_path" and "by-path" or "by-id")
+  local dir = "/dev/input/" .. (field == "path_aliases" and "by-path" or "by-id")
   local aliases = list_aliases(dir)
   if not aliases then
     return
@@ -46,8 +46,8 @@ local function attach_aliases(devs)
     paths[info.path] = info
   end
 
-  attach_alias(devs, paths, "by_id")
-  attach_alias(devs, paths, "by_path")
+  attach_alias(devs, paths, "id_aliases")
+  attach_alias(devs, paths, "path_aliases")
 end
 
 local function has_value(ls, query)
@@ -64,7 +64,7 @@ end
 ---@param dev evdev.deviceInfo
 local function matches_query(dev, query, is_path)
   if is_path then
-    return dev.path == query or has_value(dev.by_id, query) or has_value(dev.by_path, query)
+    return dev.path == query or has_value(dev.id_aliases, query) or has_value(dev.path_aliases, query)
   end
   return dev.name == query
 end

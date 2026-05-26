@@ -6,7 +6,7 @@ local sleep = system.sleep
 
 local function find_by_id(devs)
   for _, dev in ipairs(devs) do
-    if dev.by_id and next(dev.by_id) then
+    if dev.id_aliases and next(dev.id_aliases) then
       return dev
     end
   end
@@ -14,7 +14,7 @@ end
 
 local function find_by_path(devs)
   for _, dev in ipairs(devs) do
-    if dev.by_path and next(dev.by_path) then
+    if dev.path_aliases and next(dev.path_aliases) then
       return dev
     end
   end
@@ -79,16 +79,16 @@ describe("evdev.devices", function()
 
     it("attaches alias lists when present", function()
       for _, info in ipairs(devs) do
-        if info.by_id then
-          assert.Table(info.by_id)
-          for _, alias in ipairs(info.by_id) do
+        if info.id_aliases then
+          assert.Table(info.id_aliases)
+          for _, alias in ipairs(info.id_aliases) do
             assert.String(alias)
           end
         end
 
-        if info.by_path then
-          assert.Table(info.by_path)
-          for _, alias in ipairs(info.by_path) do
+        if info.path_aliases then
+          assert.Table(info.path_aliases)
+          for _, alias in ipairs(info.path_aliases) do
             assert.String(alias)
           end
         end
@@ -127,7 +127,7 @@ describe("evdev.devices", function()
         pending("no discovered device with a by-id alias")
       end
 
-      local dev = find(dev_with_alias.by_id[1])
+      local dev = find(dev_with_alias.id_aliases[1])
       assert.Table(dev) ---@cast dev -?
       assert.Equal(dev_with_alias.path, dev.path)
     end)
@@ -138,7 +138,7 @@ describe("evdev.devices", function()
         pending("no discovered device with a by-path alias")
       end
 
-      local dev = find(dev_with_alias.by_path[1])
+      local dev = find(dev_with_alias.path_aliases[1])
       assert.Table(dev) ---@cast dev -?
       assert.Equal(dev_with_alias.path, dev.path)
     end)
@@ -180,7 +180,7 @@ describe("evdev.devices", function()
         pending("no discovered device with a by-id alias")
       end
 
-      local dev = find_all(dev_with_alias.by_id[1])
+      local dev = find_all(dev_with_alias.id_aliases[1])
       assert.Table(dev) ---@cast dev -?
       assert.Equal(1, #dev)
       assert.Equal(dev_with_alias.path, dev[1].path)
@@ -192,7 +192,7 @@ describe("evdev.devices", function()
         pending("no discovered device with a by-path alias")
       end
 
-      local dev = find_all(dev_with_alias.by_path[1])
+      local dev = find_all(dev_with_alias.path_aliases[1])
       assert.Table(dev) ---@cast dev -?
       assert.Equal(1, #dev)
       assert.Equal(dev_with_alias.path, dev[1].path)
