@@ -6,5 +6,5 @@ keyboards, pointers.
 ## Install
 
 ```bash
-luarocks install evdev
+luarocks install bluelua-evdev
 ```

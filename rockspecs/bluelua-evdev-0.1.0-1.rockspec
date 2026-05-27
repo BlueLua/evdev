@@ -1,9 +1,9 @@
-package = "evdev"
-version = "scm-1"
+package = "bluelua-evdev"
+version = "0.1.0-1"
 
 source = {
   url = "git+https://github.com/BlueLua/evdev.git",
-  branch = "main",
+  tag = "v0.1.0",
 }
 
 description = {
@@ -28,8 +28,8 @@ build = {
     ["evdev._util"] = "src/evdev/_util.lua",
     ["evdev.device"] = "src/evdev/device.lua",
     ["evdev.devices"] = "src/evdev/devices.lua",
-    ["evdev.ecodes"] = "src/evdev/ecodes.lua",
     ["evdev.events"] = "src/evdev/events.lua",
+    ["evdev.ecodes"] = "src/evdev/ecodes.lua",
     ["evdev.selector"] = "src/evdev/selector.lua",
     ["evdev.uinput"] = "src/evdev/uinput.lua",
     ["evdev._core"] = {
