@@ -5,6 +5,7 @@ on:
     branches:
       - main
     paths:
+      - ".github/workflows/generate-docs.yml"
       - "types/**"
   workflow_dispatch:
 
@@ -22,7 +23,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: BlueLua/bluelua.github.io
-          path: .docgen
+          path: ${{ runner.temp }}/docgen
 
       - name: Setup Lua
         uses: leafo/gh-actions-lua@v13
@@ -30,10 +31,10 @@ jobs:
           luaVersion: "luajit"
 
       - name: Generate docs
-        run: luajit .docgen/scripts/generate-api-docs.lua types docs
+        run: luajit "${RUNNER_TEMP}/docgen/scripts/generate-api-docs.lua" types docs
 
       - name: Clean workflow helpers
-        run: rm -rf .docgen .lua
+        run: rm -rf .lua
 
       - name: Open docs PR
         uses: peter-evans/create-pull-request@v7
