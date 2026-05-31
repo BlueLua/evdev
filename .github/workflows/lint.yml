@@ -1,0 +1,30 @@
+name: Lint
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/lint.yml"
+      - ".markdownlint-cli2.jsonc"
+      - ".stylua.toml"
+      - "src/**/*.lua"
+      - "**/*.md"
+  pull_request:
+    paths:
+      - ".github/workflows/lint.yml"
+      - ".markdownlint-cli2.jsonc"
+      - ".stylua.toml"
+      - "**/*.lua"
+      - "**/*.md"
+  workflow_dispatch:
+
+jobs:
+  stylua:
+    uses: BlueLua/bluelua.github.io/.github/workflows/stylua.yml@main
+
+  luacheck:
+    uses: BlueLua/bluelua.github.io/.github/workflows/luacheck.yml@main
+
+  markdownlint:
+    uses: BlueLua/bluelua.github.io/.github/workflows/markdownlint.yml@main
