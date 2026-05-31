@@ -32,6 +32,9 @@ jobs:
       - name: Generate docs
         run: luajit .docgen/scripts/generate-api-docs.lua types docs
 
+      - name: Show generated changes
+        run: git status --short
+
       - name: Open docs PR
         uses: peter-evans/create-pull-request@v7
         with:
