@@ -1,0 +1,17 @@
+name: Generate docs
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/generate-docs.yml"
+      - "types/**"
+  workflow_dispatch:
+
+jobs:
+  generate-docs:
+    permissions:
+      contents: write
+      pull-requests: write
+    uses: BlueLua/bluelua.github.io/.github/workflows/generate-docs.yml@main
