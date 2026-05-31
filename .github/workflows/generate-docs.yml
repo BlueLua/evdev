@@ -33,9 +33,6 @@ jobs:
       - name: Generate docs
         run: luajit "${RUNNER_TEMP}/docgen/scripts/generate-api-docs.lua" types docs
 
-      - name: Clean workflow helpers
-        run: rm -rf .lua
-
       - name: Open docs PR
         uses: peter-evans/create-pull-request@v7
         with:
