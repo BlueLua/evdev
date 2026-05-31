@@ -1,0 +1,37 @@
+name: Generate docs
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "types/**"
+  workflow_dispatch:
+
+jobs:
+  generate-docs:
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Lua
+        uses: leafo/gh-actions-lua@v13
+        with:
+          luaVersion: "luajit"
+
+      - name: Generate docs
+        run: luajit scripts/generate-api-docs.lua types docs
+
+      - name: Open docs PR
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "docs: generate API docs"
+          title: "docs: generate API docs"
+          body: "Generate API docs from LuaLS type annotations."
+          branch: automation/generate-docs
+          add-paths: |
+            docs/**/*.md
