@@ -15,8 +15,11 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout docs generator
         uses: actions/checkout@v6
+        with:
+          repository: BlueLua/bluelua.github.io
+          path: .docgen
 
       - name: Setup Lua
         uses: leafo/gh-actions-lua@v13
@@ -24,7 +27,7 @@ jobs:
           luaVersion: "luajit"
 
       - name: Generate docs
-        run: luajit scripts/generate-api-docs.lua types docs
+        run: luajit .docgen/scripts/generate-api-docs.lua types docs
 
       - name: Open docs PR
         uses: peter-evans/create-pull-request@v7
