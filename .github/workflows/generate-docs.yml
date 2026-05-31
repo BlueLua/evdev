@@ -32,8 +32,8 @@ jobs:
       - name: Generate docs
         run: luajit .docgen/scripts/generate-api-docs.lua types docs
 
-      - name: Show generated changes
-        run: git status --short
+      - name: Clean workflow helpers
+        run: rm -rf .docgen .lua
 
       - name: Open docs PR
         uses: peter-evans/create-pull-request@v7
@@ -43,4 +43,4 @@ jobs:
           body: "Generate API docs from LuaLS type annotations."
           branch: automation/generate-docs
           add-paths: |
-            docs/**/*.md
+            docs
