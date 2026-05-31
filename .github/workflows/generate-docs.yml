@@ -30,12 +30,15 @@ jobs:
       - name: Generate docs
         run: luajit "${RUNNER_TEMP}/docgen/scripts/generate-api-docs.lua" types docs
 
+      - name: Format docs
+        run: npx --yes prettier@3.8.3 --write "docs/**/*.md"
+
       - name: Open docs PR
         uses: peter-evans/create-pull-request@v7
         with:
           commit-message: "docs: generate API docs"
           title: "docs: generate API docs"
-          body: "Generate API docs from LuaLS type annotations."
+          body: "Generate and format API docs from LuaLS type annotations."
           branch: automation/generate-docs
           add-paths: |
             docs
