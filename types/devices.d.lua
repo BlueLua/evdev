@@ -15,7 +15,7 @@ local M = {}
 ---List evdev input devices under `/dev/input`.
 ---
 ---```lua
----local devs = assert(evdev.devices.list_devices()
+---local devs = assert(evdev.devices.list_devices())
 ---for _, dev in ipairs(devs) do
 ---  print(dev.path, dev.name)
 ---end
