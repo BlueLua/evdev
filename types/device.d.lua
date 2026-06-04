@@ -226,6 +226,7 @@ function Device:events() end
 ---@nodiscard
 function Device:read() end
 
+---
 ---Drain queued events and return how many were discarded.
 ---
 ---This is useful after grabbing a device when you want to ignore any stale
@@ -236,8 +237,6 @@ function Device:read() end
 ---local dev = assert(Device("/dev/input/eventX"))
 ---
 ---assert(dev:grab())
----os.execute("sleep 3")
----
 ----- Move the mouse or press keys during the sleep.
 ---
 ---local dropped = assert(dev:flush())

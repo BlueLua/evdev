@@ -24,10 +24,6 @@ local M = {}
 ---local UInput = evdev.uinput.create
 ---local ui = assert(UInput())
 ---
------ Give the system a moment to notice the new virtual device.
------ Replace this with your preferred sleep helper.
----os.execute("sleep 0.5")
----
 ---ui:emit(evdev.ecodes.EV_KEY, evdev.ecodes.KEY_A, 1)
 ---ui:emit(evdev.ecodes.EV_KEY, evdev.ecodes.KEY_A, 0)
 ---ui:sync()
@@ -98,10 +94,6 @@ function UInput:is_open() end
 ---local UInput = evdev.uinput.create
 ---local ui = assert(UInput())
 ---
------ Give the system a moment to notice the new virtual device.
------ Replace this with your preferred sleep helper.
----os.execute("sleep 0.5")
----
 ---local EV_KEY = evdev.ecodes.EV_KEY
 ---ui:emit(EV_KEY, evdev.ecodes.KEY_A, 1)
 ---ui:emit(EV_KEY, evdev.ecodes.KEY_A, 0)
@@ -143,7 +135,6 @@ function UInput:sync() end
 ---```lua
 ---local UInput = evdev.uinput.create
 ---local ui = assert(UInput())
----os.execute("sleep 0.5")
 ---
 ----- Set repeat delay to 500ms, repeat period to 50ms
 ---ui:set_repeat(500, 50)
@@ -161,7 +152,6 @@ function UInput:set_repeat(delay, period) end
 ---```lua
 ---local UInput = evdev.uinput.create
 ---local ui = assert(UInput())
----os.execute("sleep 0.5")
 ---
 ---local delay, period, err = ui:get_repeat()
 ---assert(delay, err)
