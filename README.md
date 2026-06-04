@@ -25,8 +25,6 @@ Get started with the
 - **Multiple Lua Versions**: Compatible with LuaJIT, Lua 5.1, 5.2, 5.3, 5.4, and
   5.5.
 
----
-
 ## 📦 Installation
 
 Install the library via LuaRocks:
