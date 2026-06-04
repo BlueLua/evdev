@@ -59,6 +59,18 @@ function M.create(spec) end
 local UInput = {}
 
 ---
+---Get the file descriptor of the virtual device.
+---
+---```lua
+---local UInput = evdev.uinput.create
+---local ui = assert(UInput())
+---print(ui:fd())
+---```
+---
+---@return evdev.fd? fd Linux file descriptor.
+function UInput:fd() end
+
+---
 ---Destroy and close the virtual device.
 ---
 ---```lua

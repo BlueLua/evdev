@@ -216,6 +216,10 @@ function UInput:sync()
   return call_uinput(self, "sync")
 end
 
+function UInput:fd()
+  return call_uinput(self, "fd")
+end
+
 ---@type evdev.uinput
 local M = {}
 
