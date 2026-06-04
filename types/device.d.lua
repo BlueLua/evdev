@@ -247,6 +247,24 @@ function Device:read() end
 ---@return string? err Error message on failure.
 function Device:flush() end
 
+---
+---Query and monitor physical Linux input devices.
+---
+---```lua
+---local evdev = require "evdev"
+---
+----- Find and open the primary keyboard
+---local dev = assert(evdev.device.open("/dev/input/event0"))
+---print("Opened device: " .. dev.name)
+---
+----- Process events in a loop
+---for event in dev:events() do
+---  if evdev.events.is_press(event) then
+---    print("Key Pressed! Code: " .. event.code)
+---  end
+---end
+---```
+---
 ---@class evdev.device
 local M = {}
 
