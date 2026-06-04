@@ -50,6 +50,8 @@ function M.create(spec) end
 ---@field info fun(self: evdev.coreUInput): (info:evdev.deviceInfo?, err:string?)
 ---@field is_open fun(self: evdev.coreUInput): boolean
 ---@field sync fun(self: evdev.coreUInput): (ok:true?, err:string?)
+---@field set_repeat fun(self: evdev.coreUInput, delay:integer, period:integer): (ok:true?, err:string?)
+---@field get_repeat fun(self: evdev.coreUInput): (delay:integer?, period_or_err:(integer|string)?)
 
 ---
 ---Open virtual input device handle.
@@ -134,5 +136,41 @@ function UInput:emit(type, code, value) end
 ---@return true? ok `true` when `SYN_REPORT` is emitted successfully.
 ---@return string? err Error message on failure.
 function UInput:sync() end
+
+---
+---Set the keyboard repeat rate on the virtual device.
+---
+---```lua
+---local UInput = evdev.uinput.create
+---local ui = assert(UInput())
+---os.execute("sleep 0.5")
+---
+----- Set repeat delay to 500ms, repeat period to 50ms
+---ui:set_repeat(500, 50)
+---```
+---
+---@param delay integer Delay in milliseconds before key repeat starts.
+---@param period integer Period in milliseconds between repeated key events.
+---@return true? ok `true` when the repeat rate is set successfully.
+---@return string? err Error message on failure.
+function UInput:set_repeat(delay, period) end
+
+---
+---Get the current keyboard repeat rate from the virtual device.
+---
+---```lua
+---local UInput = evdev.uinput.create
+---local ui = assert(UInput())
+---os.execute("sleep 0.5")
+---
+---local delay, period, err = ui:get_repeat()
+---assert(delay, err)
+---print(delay, period)
+---```
+---
+---@return integer? delay Repeat delay in milliseconds.
+---@return integer? period Repeat period in milliseconds.
+---@return string? err Error message on failure.
+function UInput:get_repeat() end
 
 return M

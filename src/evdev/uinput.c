@@ -284,6 +284,16 @@ int evdev_create_uinput(lua_State *L) {
   uinput->created = 1;
   uinput->path = NULL;
   luaL_setmetatable(L, EVDEV_UINPUT_MT);
+
+  result = evdev_cache_uinput_path(L, uinput);
+  if (result != 0) {
+    (void)ioctl(fd, UI_DEV_DESTROY);
+    evdev_close_fd(&fd);
+    uinput->fd = -1;
+    uinput->created = 0;
+    return result;
+  }
+
   return 1;
 }
 
@@ -334,6 +344,104 @@ static int evdev_uinput_sync(lua_State *L) {
   }
 
   return evdev_emit_raw(L, uinput->fd, EV_SYN, SYN_REPORT, 0);
+}
+
+static int evdev_push_repeat_unsupported(lua_State *L, const char *action,
+                                         const char *path) {
+  lua_pushnil(L);
+  lua_pushfstring(L, "%s %s: device does not support repeat settings", action,
+                  path != NULL ? path : "<unknown>");
+  return 2;
+}
+
+static int evdev_uinput_open_event_node(lua_State *L, evdev_uinput_t *uinput,
+                                        int flags) {
+  int err_result;
+  int fd;
+
+  err_result = evdev_cache_uinput_path(L, uinput);
+  if (err_result != 0) {
+    return -1;
+  }
+
+  fd = evdev_open_cloexec(uinput->path, flags | O_NONBLOCK);
+  if (fd < 0) {
+    (void)evdev_push_errno(L, "open", uinput->path);
+    return -1;
+  }
+
+  return fd;
+}
+
+static int evdev_uinput_set_repeat(lua_State *L) {
+  evdev_uinput_t *uinput = evdev_check_uinput(L, 1);
+  unsigned int repeat[2];
+  lua_Integer delay = luaL_checkinteger(L, 2);
+  lua_Integer period = luaL_checkinteger(L, 3);
+  int err_result;
+  int fd;
+
+  luaL_argcheck(L, delay >= 0, 2, "delay must be non-negative");
+  luaL_argcheck(L, period >= 0, 3, "period must be non-negative");
+
+  err_result = evdev_check_open_uinput(L, uinput);
+  if (err_result != 0) {
+    return err_result;
+  }
+
+  fd = evdev_uinput_open_event_node(L, uinput, O_RDWR);
+  if (fd < 0) {
+    return 2;
+  }
+
+  repeat[0] = (unsigned int)delay;
+  repeat[1] = (unsigned int)period;
+
+  if (ioctl(fd, EVIOCSREP, repeat) < 0) {
+    int saved_errno = errno;
+    evdev_close_fd(&fd);
+    errno = saved_errno;
+    if (errno == ENOSYS || errno == ENOTTY || errno == EINVAL) {
+      return evdev_push_repeat_unsupported(L, "set repeat", uinput->path);
+    }
+    return evdev_push_errno(L, "set repeat", uinput->path);
+  }
+
+  evdev_close_fd(&fd);
+  lua_pushboolean(L, 1);
+  return 1;
+}
+
+static int evdev_uinput_get_repeat(lua_State *L) {
+  evdev_uinput_t *uinput = evdev_check_uinput(L, 1);
+  unsigned int repeat[2] = {0, 0};
+  int err_result;
+  int fd;
+
+  err_result = evdev_check_open_uinput(L, uinput);
+  if (err_result != 0) {
+    return err_result;
+  }
+
+  fd = evdev_uinput_open_event_node(L, uinput, O_RDONLY);
+  if (fd < 0) {
+    return 2;
+  }
+
+  if (ioctl(fd, EVIOCGREP, repeat) < 0) {
+    int saved_errno = errno;
+    evdev_close_fd(&fd);
+    errno = saved_errno;
+    if (errno == ENOSYS || errno == ENOTTY || errno == EINVAL) {
+      return evdev_push_repeat_unsupported(L, "get repeat", uinput->path);
+    }
+    return evdev_push_errno(L, "get repeat", uinput->path);
+  }
+
+  evdev_close_fd(&fd);
+  lua_pushinteger(L, repeat[0]);
+  lua_pushinteger(L, repeat[1]);
+  return 2;
 }
 
 static int evdev_uinput_close(lua_State *L) {
@@ -451,10 +559,16 @@ static int evdev_uinput_tostring(lua_State *L) {
 }
 
 const luaL_Reg evdev_uinput_methods[] = {
-    {"emit", evdev_uinput_emit},     {"sync", evdev_uinput_sync},
-    {"close", evdev_uinput_close},   {"is_open", evdev_uinput_is_open},
-    {"path", evdev_uinput_get_path}, {"info", evdev_uinput_info},
-    {"fd", evdev_uinput_fd},         {NULL, NULL},
+    {"emit", evdev_uinput_emit},
+    {"sync", evdev_uinput_sync},
+    {"set_repeat", evdev_uinput_set_repeat},
+    {"get_repeat", evdev_uinput_get_repeat},
+    {"close", evdev_uinput_close},
+    {"is_open", evdev_uinput_is_open},
+    {"path", evdev_uinput_get_path},
+    {"info", evdev_uinput_info},
+    {"fd", evdev_uinput_fd},
+    {NULL, NULL},
 };
 
 const luaL_Reg evdev_uinput_meta[] = {

@@ -176,6 +176,20 @@ function UInput:emit(type, code, value)
   return call_uinput(self, "emit", type, code, value)
 end
 
+function UInput:set_repeat(delay, period)
+  validate("delay", delay, "number")
+  validate("period", period, "number")
+  return call_uinput(self, "set_repeat", delay, period)
+end
+
+function UInput:get_repeat()
+  local delay, period = call_uinput(self, "get_repeat")
+  if not delay then
+    return nil, nil, period
+  end
+  return delay, period
+end
+
 function UInput:is_open()
   local core = rawget(self, "_core")
   return core ~= nil and core:is_open()
