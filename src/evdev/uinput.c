@@ -236,9 +236,29 @@ int evdev_create_uinput(lua_State *L) {
 
   luaL_checktype(L, 1, LUA_TTABLE);
   spec_index = 1;
-  path = evdev_get_table_string_field(L, spec_index, "path", "/dev/uinput");
-  name = evdev_get_table_string_field(L, spec_index, "name",
-                                      "Lua evdev virtual keyboard");
+
+  if (!evdev_table_has_field(L, spec_index, "path")) {
+    return evdev_push_error(L, "missing field 'path'");
+  }
+  path = evdev_get_table_string_field(L, spec_index, "path", NULL);
+
+  if (!evdev_table_has_field(L, spec_index, "name")) {
+    return evdev_push_error(L, "missing field 'name'");
+  }
+  name = evdev_get_table_string_field(L, spec_index, "name", NULL);
+
+  if (!evdev_table_has_field(L, spec_index, "bustype")) {
+    return evdev_push_error(L, "missing field 'bustype'");
+  }
+  if (!evdev_table_has_field(L, spec_index, "vendor")) {
+    return evdev_push_error(L, "missing field 'vendor'");
+  }
+  if (!evdev_table_has_field(L, spec_index, "product")) {
+    return evdev_push_error(L, "missing field 'product'");
+  }
+  if (!evdev_table_has_field(L, spec_index, "version")) {
+    return evdev_push_error(L, "missing field 'version'");
+  }
 
   fd = evdev_open_cloexec(path, O_WRONLY | O_NONBLOCK);
   if (fd < 0) {
@@ -266,13 +286,13 @@ int evdev_create_uinput(lua_State *L) {
   memset(&setup, 0, sizeof(setup));
   snprintf(setup.name, UINPUT_MAX_NAME_SIZE, "%s", name);
   setup.id.bustype = (unsigned short)evdev_get_table_integer_field(
-      L, spec_index, "bustype", BUS_USB);
+      L, spec_index, "bustype", 0);
   setup.id.vendor = (unsigned short)evdev_get_table_integer_field(
-      L, spec_index, "vendor", 0x1209);
+      L, spec_index, "vendor", 0);
   setup.id.product = (unsigned short)evdev_get_table_integer_field(
-      L, spec_index, "product", 0xE7DE);
+      L, spec_index, "product", 0);
   setup.id.version = (unsigned short)evdev_get_table_integer_field(
-      L, spec_index, "version", 1);
+      L, spec_index, "version", 0);
 
   if (evdev_write_all(fd, &setup, sizeof(setup)) < 0) {
     result = evdev_push_errno(L, "configure uinput", path);

@@ -15,6 +15,17 @@ local fmt = string.format
 ---@diagnostic disable-next-line: missing-fields
 local UInput = {}
 
+-- stylua: ignore
+---@type evdev.deviceInfo
+local defaults = {
+  path    = "/dev/uinput",
+  name    = "Lua Virtual Device",
+  bustype = 3, -- BUS_USB
+  vendor  = 0x1209,
+  product = 0xE7DE,
+  version = 1,
+}
+
 ---@type fun(dev:evdev.UInput, fname:string, ...):...
 local function call_uinput(ui, fname, ...)
   local core = rawget(ui, "_core")
@@ -134,6 +145,12 @@ local function normalize(spec)
   validate("spec.version", spec.version, "number", true)
   validate("spec.name", spec.name, "string", true)
   validate("spec.path", spec.path, "string", true)
+
+  for k, v in pairs(defaults) do
+    if spec[k] == nil then
+      spec[k] = v
+    end
+  end
 
   normalize_code_list(spec, "keys", "KEY_* or BTN_*")
   normalize_code_list(spec, "rels", "REL_*")
