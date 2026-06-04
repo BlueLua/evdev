@@ -8,7 +8,7 @@
 ---Lua bindings for Linux evdev devices and /dev/uinput virtual devices.
 ---
 ---@class evdev
----@field _VERSION "evdev 0.1.0"
+---@field _VERSION "evdev 0.2.0"
 ---@field _core evdev._core
 ---@field device evdev.device
 ---@field devices evdev.devices

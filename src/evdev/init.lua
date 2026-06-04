@@ -1,5 +1,5 @@
 return setmetatable({
-  _VERSION = "evdev 0.1.0",
+  _VERSION = "evdev 0.2.0",
 }, {
   __index = function(t, k)
     local modname = "evdev." .. tostring(k)
