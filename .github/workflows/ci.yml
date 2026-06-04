@@ -37,7 +37,7 @@ jobs:
       - uses: leafo/gh-actions-luarocks@v6
 
       - name: Build
-        run: luarocks make rockspecs/evdev-scm-1.rockspec
+        run: luarocks make rockspecs/bluelua-evdev-scm-1.rockspec
 
       - name: Install busted
         run: |
