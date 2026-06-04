@@ -1,13 +1,10 @@
 ---@diagnostic disable: need-check-nil
 
 local evdev = require "evdev"
-local system = require "system"
-
-local ecodes = evdev.ecodes
 
 local Device = evdev.device.open
 local UInput = evdev.uinput.create
-local sleep = system.sleep
+local ecodes = evdev.ecodes
 local fmt = string.format
 
 describe("evdev.device", function()
@@ -19,7 +16,6 @@ describe("evdev.device", function()
       keys = { ecodes.BTN_LEFT, ecodes.BTN_RIGHT, ecodes.BTN_MIDDLE },
       rels = { ecodes.REL_X, ecodes.REL_Y, ecodes.REL_WHEEL },
     }))
-    sleep(0.1)
   end)
 
   teardown(function()
@@ -249,7 +245,6 @@ describe("evdev.device", function()
   describe("read()", function()
     it("returns one emitted event", function()
       local ui = assert(UInput({ keys = { ecodes.KEY_F24 } }))
-      sleep(0.1)
 
       local path = ui.path
       local dev = assert(Device(path))
@@ -302,7 +297,6 @@ describe("evdev.device", function()
 
     it("yields events through an iterator", function()
       local ui = assert(UInput({ keys = { ecodes.KEY_F24 } }))
-      sleep(0.1)
 
       local path = ui.path
       local dev = assert(Device(path))
@@ -323,7 +317,6 @@ describe("evdev.device", function()
 
     it("yields multiple events in order", function()
       local ui = assert(UInput({ keys = { ecodes.KEY_F24, ecodes.KEY_F23 } }))
-      sleep(0.1)
 
       local dev = assert(Device(ui.path))
 

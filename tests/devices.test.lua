@@ -1,8 +1,6 @@
 local evdev = require "evdev"
-local system = require "system"
 
 local UInput = evdev.uinput.create
-local sleep = system.sleep
 
 local function find_by_id(devs)
   for _, dev in ipairs(devs) do
@@ -29,7 +27,6 @@ describe("evdev.devices", function()
     kb1 = assert(UInput({ name = "evdev test keyboard" }))
     kb2 = assert(UInput({ name = "evdev test keyboard" }))
     mouse = assert(UInput({ name = "evdev test mouse" }))
-    sleep(0.1)
   end)
 
   -- stylua: ignore
