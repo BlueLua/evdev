@@ -12,7 +12,7 @@ Lua bindings for Linux `evdev` input devices and `/dev/uinput` virtual devices
 Get started with the
 [documentation and tutorials](https://bluelua.github.io/evdev).
 
-## 🚀 Features
+## ✨ Features
 
 - **Device Discovery**: List and search for connected input devices by name,
   path, or physical location.
@@ -35,7 +35,7 @@ Install the library via LuaRocks:
 luarocks install bluelua-evdev
 ```
 
-## 🛠️ Quick Examples
+## 🚀 Usage
 
 ### Listening to Key Presses
 
