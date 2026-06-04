@@ -14,6 +14,29 @@
 ---@field product? integer Product ID (default: `0xE7DE`).
 ---@field version? integer Version number (default: `1`).
 
+---
+---Create and control virtual input devices using `/dev/uinput`.
+---
+---```lua
+---local evdev = require "evdev"
+---local ecodes = evdev.ecodes
+---
+----- Create a virtual keyboard device
+---local ui = assert(evdev.uinput.create())
+---print("Virtual device created at: " .. ui.path)
+---
+----- Simulate typing Shift + A
+---ui:emit(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 1)
+---ui:emit(ecodes.EV_KEY, ecodes.KEY_A, 1)
+---ui:sync()
+---
+---ui:emit(ecodes.EV_KEY, ecodes.KEY_A, 0)
+---ui:emit(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 0)
+---ui:sync()
+---
+---ui:close()
+---```
+---
 ---@class evdev.uinput
 local M = {}
 
