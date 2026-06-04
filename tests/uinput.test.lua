@@ -1,15 +1,25 @@
 ---@diagnostic disable: param-type-mismatch, assign-type-mismatch
 
 local evdev = require "evdev"
-local system = require "system"
 
 local UInput = evdev.uinput.create
 local normalize = evdev.uinput._normalize ---@diagnostic disable-line: undefined-field
 local ecodes = evdev.ecodes
-local sleep = system.sleep
 local fmt = string.format
 
 describe("evdev.uinput()", function()
+  local ui
+
+  before_each(function()
+    ui = nil
+  end)
+
+  after_each(function()
+    if ui then
+      assert(ui:close())
+    end
+  end)
+
   describe("validations", function()
     it("rejects a non-table spec", function()
       assert.Error(function()
@@ -183,31 +193,22 @@ describe("evdev.uinput()", function()
   end)
 
   describe("UInput object", function()
-    local ui
-
-    before_each(function()
-      if not (ui and ui:is_open()) then
-        ui = assert(UInput({ name = "Lua Virtual Device" }))
-        sleep(0.1)
-      end
-    end)
-
-    teardown(function()
-      ui:close()
-    end)
-
     it("loads metadata fields", function()
+      local name = "Lua Virtual Device"
+      ui = assert(UInput({ name = name }))
       assert.Match("^/dev/input/event%d+$", ui.path)
-      assert.Equal("Lua Virtual Device", ui.name)
+      assert.Equal(name, ui.name)
     end)
 
     it("reports open state and closes cleanly", function()
+      ui = assert(UInput())
       assert.True(ui:is_open())
       assert.True(ui:close())
       assert.False(ui:is_open())
     end)
 
     it("returns a closed-device error for emit after close", function()
+      ui = assert(UInput())
       assert.True(ui:close())
 
       local ok, err = ui:emit(ecodes.EV_KEY, ecodes.KEY_A, 1)
@@ -216,6 +217,7 @@ describe("evdev.uinput()", function()
     end)
 
     it("returns a closed-device error for sync after close", function()
+      ui = assert(UInput())
       assert.True(ui:close())
 
       local ok, err = ui:sync()
@@ -224,6 +226,7 @@ describe("evdev.uinput()", function()
     end)
 
     it("returns repeat settings for repeat-capable devices", function()
+      ui = assert(UInput())
       local delay, period, err = ui:get_repeat()
       assert.Number(delay)
       assert.Number(period)
@@ -231,6 +234,7 @@ describe("evdev.uinput()", function()
     end)
 
     it("updates repeat settings for repeat-capable devices", function()
+      ui = assert(UInput())
       local delay, period, err = ui:get_repeat()
       assert.Number(delay)
       assert.Number(period)
@@ -239,28 +243,25 @@ describe("evdev.uinput()", function()
     end)
 
     it("returns an unsupported get_repeat error for non-repeat devices", function()
-      local ui = assert(UInput({
+      ui = assert(UInput({
         name = "uinput unsupported get repeat test",
         keys = { ecodes.BTN_LEFT },
         rels = { ecodes.REL_X },
       }))
 
-      sleep(0.1)
-
       local delay, period, err = ui:get_repeat()
       assert.Nil(delay)
       assert.Nil(period)
       assert.Equal(fmt("get repeat %s: device does not support repeat settings", ui.path), err)
-      assert.True(ui:close())
     end)
 
     it("returns an unsupported set_repeat error for non-repeat devices", function()
-      local ui = assert(UInput({
+      ui = assert(UInput({
         name = "uinput unsupported set repeat test",
         keys = { ecodes.BTN_RIGHT },
         rels = { ecodes.REL_Y },
       }))
-      sleep(0.1)
+
       local ok, err = ui:set_repeat(300, 40)
       assert.Nil(ok)
       assert.Equal(fmt("set repeat %s: device does not support repeat settings", ui.path), err)
@@ -268,7 +269,7 @@ describe("evdev.uinput()", function()
     end)
 
     it("returns a closed-device error for get_repeat after close", function()
-      local ui = assert(UInput({ name = "closed get repeat test" }))
+      ui = assert(UInput({ name = "closed get repeat test" }))
       assert.True(ui:close())
 
       local delay, period, err = ui:get_repeat()
@@ -278,7 +279,7 @@ describe("evdev.uinput()", function()
     end)
 
     it("returns a closed-device error for set_repeat after close", function()
-      local ui = assert(UInput({ name = "closed set repeat test" }))
+      ui = assert(UInput({ name = "closed set repeat test" }))
       assert.True(ui:close())
 
       local ok, err = ui:set_repeat(300, 40)
@@ -287,7 +288,7 @@ describe("evdev.uinput()", function()
     end)
 
     it("validates emit argument types before using the handle", function()
-      local ui = assert(UInput({ name = "emit validation test" }))
+      ui = assert(UInput({ name = "emit validation test" }))
 
       assert.Error(function()
         ui:emit("key", ecodes.KEY_A, 1)
@@ -300,12 +301,10 @@ describe("evdev.uinput()", function()
       assert.Error(function()
         ui:emit(ecodes.EV_KEY, ecodes.KEY_A, "down")
       end, "value: (number expected, got string)")
-
-      ui:close()
     end)
 
     it("validates set_repeat argument types before using the handle", function()
-      local ui = assert(UInput({ name = "set repeat validation test" }))
+      ui = assert(UInput({ name = "set repeat validation test" }))
 
       assert.Error(function()
         ui:set_repeat("fast", 40)
@@ -314,8 +313,6 @@ describe("evdev.uinput()", function()
       assert.Error(function()
         ui:set_repeat(300, "slow")
       end, "period: (number expected, got string)")
-
-      ui:close()
     end)
   end)
 end)

@@ -177,11 +177,18 @@ static int evdev_wait_for_uinput_event_path(const char *sysname, char *path,
 
   for (i = 0; i < 50; i++) {
     if (evdev_find_uinput_event_path(sysname, path, path_len) == 0) {
-      return 0;
+      int test_fd = open(path, O_RDONLY | O_NONBLOCK | O_CLOEXEC);
+      if (test_fd >= 0) {
+        close(test_fd);
+        return 0;
+      }
+      saved_errno = errno;
+    } else {
+      saved_errno = errno;
     }
 
-    saved_errno = errno;
-    if (saved_errno != ENOENT && saved_errno != ENOTDIR) {
+    if (saved_errno != ENOENT && saved_errno != ENOTDIR &&
+        saved_errno != EACCES) {
       break;
     }
     if (i + 1 < 50) {
