@@ -65,6 +65,18 @@ describe("evdev.selector", function()
         sel:remove({}) ---@diagnostic disable-line
       end, "device: (evdev.Device expected)")
     end)
+
+    it("removes a registered device", function()
+      local first = assert(Device("/dev/null"))
+      local second = assert(Device("/dev/null"))
+      local sel = Selector({ first, second })
+      sel:remove(first)
+
+      local ready = assert(sel:poll())
+      assert.Same({ second }, ready)
+      first:close()
+      second:close()
+    end)
   end)
 
   describe("clear()", function()

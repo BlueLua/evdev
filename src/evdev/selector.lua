@@ -40,7 +40,7 @@ end
 
 function Selector:remove(dev)
   validate_device("device", dev)
-  local _, i = tbl_find(self._devices, dev)
+  local i = tbl_find(self._devices, dev)
   if i then
     table.remove(self._devices, i)
     table.remove(self._handles, i)
