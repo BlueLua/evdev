@@ -41,6 +41,13 @@ jobs:
   ci:
     uses: BlueLua/.github/.github/workflows/ci.yml@main
     with:
+      run: |
+        echo 'KERNEL=="event*", SUBSYSTEM=="input", MODE="0666"' | sudo tee /etc/udev/rules.d/99-evdev-test.rules
+        sudo udevadm control --reload-rules
+        sudo modprobe uinput || true
+        sudo udevadm trigger --subsystem-match=input || true
+        test -e /dev/uinput
+        sudo chmod 666 /dev/uinput
       # Forward OS selections if triggered manually, otherwise use defaults for push/pr triggers
       linux: ${{ (github.event_name == 'workflow_dispatch' && inputs.linux == true) || (github.event_name != 'workflow_dispatch' && true) }}
       macos: ${{ (github.event_name == 'workflow_dispatch' && inputs.macos == true) || (github.event_name != 'workflow_dispatch' && false) }}
