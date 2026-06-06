@@ -244,6 +244,7 @@ local function write_ecodes_class(path)
     "",
     generated_from,
     "",
+    "-- stylua: ignore",
     "---@class evdev.ecodes",
     fmt("local M = %s", stringify(ecodes)),
     "",
@@ -262,6 +263,7 @@ local function write_ecodes_enums(path)
   for prefix, ecodes in spairs(ecodes_by_prefix) do
     if prefixes[prefix] then
       text[#text + 1] = ""
+      text[#text + 1] = "-- stylua: ignore"
       text[#text + 1] = fmt("---@enum evdev.ecodes.%s", prefix:lower())
       text[#text + 1] = fmt("local %s = %s", prefix, stringify(ecodes))
     end
