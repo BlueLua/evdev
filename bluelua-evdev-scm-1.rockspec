@@ -3,7 +3,6 @@ version = "scm-1"
 
 source = {
   url = "git+https://github.com/BlueLua/evdev.git",
-  branch = "main",
 }
 
 description = {
