@@ -11,14 +11,6 @@ on:
         description: "Linux"
         type: boolean
         default: false
-      macos:
-        description: "macOS"
-        type: boolean
-        default: false
-      windows:
-        description: "Windows"
-        type: boolean
-        default: false
       stylua:
         description: "StyLua"
         type: boolean
@@ -65,9 +57,9 @@ jobs:
         test -e /dev/uinput
         sudo chmod 666 /dev/uinput
 
-      linux:   ${{ inputs.linux   || github.event_name != 'workflow_dispatch' }}
-      macos:   ${{ inputs.macos   || github.event_name != 'workflow_dispatch' }}
-      windows: ${{ inputs.windows || github.event_name != 'workflow_dispatch' }}
+      linux:   ${{ inputs.linux || github.event_name != 'workflow_dispatch' }}
+      macos:   false
+      windows: false
 
       stylua:       ${{ inputs.stylua       || false }}
       luacheck:     ${{ inputs.luacheck     || false }}
