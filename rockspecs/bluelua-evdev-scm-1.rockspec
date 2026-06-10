@@ -7,13 +7,6 @@ source = {
 }
 
 description = {
-  summary = "Lua bindings for Linux evdev and uinput input control",
-  detailed = [[
-  Lua bindings for Linux evdev and /dev/uinput virtual devices.
-  Open input devices, read events, poll multiple devices, and create virtual
-  keyboards or relative pointer devices from Lua.
-  ]],
-  homepage = "https://github.com/BlueLua/evdev",
   license = "MIT",
 }
 
