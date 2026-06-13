@@ -7,6 +7,10 @@ on:
     branches: [main]
   workflow_dispatch:
     inputs:
+      linux:
+        description: "Linux"
+        type: boolean
+        default: true
       stylua:
         description: "StyLua"
         type: boolean
@@ -39,20 +43,17 @@ on:
         description: "Publish release"
         type: boolean
         default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   ci:
     uses: BlueLua/.github/.github/workflows/ci.yml@main
     secrets: inherit
     # prettier-ignore
     with:
-      run: |
-        echo 'KERNEL=="event*", SUBSYSTEM=="input", MODE="0666"' | sudo tee /etc/udev/rules.d/99-evdev-test.rules
-        sudo udevadm control --reload-rules
-        sudo modprobe uinput || true
-        sudo udevadm trigger --subsystem-match=input || true
-        test -e /dev/uinput
-        sudo chmod 666 /dev/uinput
-
       linux:   true
       macos:   false
       windows: false
