@@ -6,6 +6,9 @@ on:
     paths:
       - "scripts/generate-ecodes.lua"
       - ".github/workflows/generate-ecodes.yml"
+  # Weekly run every Sunday at 00:00 UTC
+  schedule:
+    - cron: "0 0 * * 0"
   workflow_dispatch:
 
 permissions:
@@ -25,8 +28,11 @@ jobs:
         with:
           luaVersion: "luajit"
 
+      - name: Download latest input-event-codes.h
+        run: curl -sSfL https://raw.githubusercontent.com/torvalds/linux/master/include/uapi/linux/input-event-codes.h -o input-event-codes.h
+
       - name: Run code generation script
-        run: ./scripts/generate-ecodes.lua
+        run: ./scripts/generate-ecodes.lua input-event-codes.h
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8
