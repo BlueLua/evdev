@@ -37,10 +37,19 @@ jobs:
       - name: Clean up temporary header
         run: rm input-event-codes.h
 
+      - name: Determine PR type
+        id: pr-type
+        run: |
+          if git diff --quiet HEAD src/evdev/ecodes.lua; then
+            echo "title=chore(ecodes): auto-regenerate ecodes files" >> $GITHUB_OUTPUT
+          else
+            echo "title=feat(ecodes): update event codes to latest Linux kernel" >> $GITHUB_OUTPUT
+          fi
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8
         with:
-          commit-message: "chore: auto-regenerate ecodes files"
-          title: "chore: auto-regenerate ecodes files"
+          commit-message: "${{ steps.pr-type.outputs.title }}"
+          title: "${{ steps.pr-type.outputs.title }}"
           body: "Auto-generated changes by the `generate-ecodes` workflow."
           branch: "auto-generate-ecodes"
