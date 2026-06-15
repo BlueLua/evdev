@@ -2,3 +2,4 @@ build/
 *.rock
 *.o
 *.so
+.lua/
