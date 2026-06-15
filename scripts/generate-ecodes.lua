@@ -244,6 +244,9 @@ local function write_ecodes_class(path)
     "",
     generated_from,
     "",
+    "---",
+    "---Linux input event codes.",
+    "---",
     "-- stylua: ignore",
     "---@class evdev.ecodes",
     fmt("local M = %s", stringify(ecodes)),
@@ -252,6 +255,22 @@ local function write_ecodes_class(path)
   }
   writefile(path, concat(text, "\n"), "\n")
 end
+
+-- stylua: ignore
+local descriptions = {
+  ABS        = "Absolute axis codes (e.g. joysticks, touchscreens, tablets).",
+  BTN        = "Button codes (e.g. mouse buttons, joysticks, gamepads).",
+  EV         = "Event types (e.g. key press, relative movement, absolute position, synchronization).",
+  INPUT_PROP = "Input device property flags (e.g. direct touch, semi-mt, pointer).",
+  KEY        = "Keyboard key codes.",
+  LED        = "LED status indicator codes (e.g. num lock, caps lock, scroll lock).",
+  MSC        = "Miscellaneous event codes that do not fit into other types.",
+  REL        = "Relative axis codes (e.g. mouse movement, scroll wheels).",
+  REP        = "Autorepeat configuration event codes.",
+  SND        = "Sound output event codes (e.g. system bell, sound tones).",
+  SW         = "Binary switch state codes (e.g. lid closed, tablet mode).",
+  SYN        = "Synchronization event codes used to group events or signal device status changes.",
+}
 
 local function write_ecodes_enums(path)
   local text = {
@@ -263,6 +282,9 @@ local function write_ecodes_enums(path)
   for prefix, ecodes in spairs(ecodes_by_prefix) do
     if prefixes[prefix] then
       text[#text + 1] = ""
+      text[#text + 1] = "---"
+      text[#text + 1] = fmt("---%s", descriptions[prefix] or (prefix .. " codes."))
+      text[#text + 1] = "---"
       text[#text + 1] = "-- stylua: ignore"
       text[#text + 1] = fmt("---@enum evdev.ecodes.%s", prefix:lower())
       text[#text + 1] = fmt("local %s = %s", prefix, stringify(ecodes))
