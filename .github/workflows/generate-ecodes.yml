@@ -1,0 +1,37 @@
+name: Generate Ecodes
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/generate-ecodes.lua"
+      - ".github/workflows/generate-ecodes.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install Lua
+        uses: leafo/gh-actions-lua@v13
+        with:
+          luaVersion: "luajit"
+
+      - name: Run code generation script
+        run: ./scripts/generate-ecodes.lua
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          commit-message: "chore: auto-regenerate ecodes files"
+          title: "chore: auto-regenerate ecodes files"
+          body: "Auto-generated changes by the `generate-ecodes` workflow."
+          branch: "auto-generate-ecodes"
