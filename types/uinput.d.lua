@@ -17,12 +17,16 @@
 ---
 ---Create and control virtual input devices using `/dev/uinput`.
 ---
+---## Usage
+---
 ---```lua
 ---local evdev = require "evdev"
+---
 ---local ecodes = evdev.ecodes
+---local UInput = evdev.uinput.create
 ---
 ----- Create a virtual keyboard device
----local ui = assert(evdev.uinput.create())
+---local ui = assert(UInput())
 ---print("Virtual device created at: " .. ui.path)
 ---
 ----- Simulate typing Shift + A
@@ -44,7 +48,6 @@ local M = {}
 ---Create a virtual input device.
 ---
 ---```lua
----local UInput = evdev.uinput.create
 ---local ui = assert(UInput())
 ---
 ---ui:emit(evdev.ecodes.EV_KEY, evdev.ecodes.KEY_A, 1)
@@ -85,7 +88,6 @@ local UInput = {}
 ---Get the file descriptor of the virtual device.
 ---
 ---```lua
----local UInput = evdev.uinput.create
 ---local ui = assert(UInput())
 ---print(ui:fd())
 ---```
@@ -97,7 +99,6 @@ function UInput:fd() end
 ---Destroy and close the virtual device.
 ---
 ---```lua
----local UInput = evdev.uinput.create
 ---local ui = assert(UInput())
 ---ui:close()
 ---```
@@ -110,9 +111,7 @@ function UInput:close() end
 ---Return whether the virtual device is still open.
 ---
 ---```lua
----local UInput = evdev.uinput.create
 ---local ui = assert(UInput())
----
 ---if ui:is_open() then
 ---  ui:close()
 ---end
@@ -126,7 +125,6 @@ function UInput:is_open() end
 ---Emit one raw input event.
 ---
 ---```lua
----local UInput = evdev.uinput.create
 ---local ui = assert(UInput())
 ---
 ---local EV_KEY = evdev.ecodes.EV_KEY
@@ -153,9 +151,7 @@ function UInput:emit(type, code, value) end
 ---Flush queued input events as one frame.
 ---
 ---```lua
----local UInput = evdev.uinput.create
 ---local ui = assert(UInput())
----
 ---ui:emit(evdev.ecodes.EV_KEY, evdev.ecodes.KEY_LEFTSHIFT, 0)
 ---ui:sync()
 ---```
@@ -168,9 +164,7 @@ function UInput:sync() end
 ---Set the keyboard repeat rate on the virtual device.
 ---
 ---```lua
----local UInput = evdev.uinput.create
 ---local ui = assert(UInput())
----
 ----- Set repeat delay to 500ms, repeat period to 50ms
 ---ui:set_repeat(500, 50)
 ---```
@@ -185,9 +179,7 @@ function UInput:set_repeat(delay, period) end
 ---Get the current keyboard repeat rate from the virtual device.
 ---
 ---```lua
----local UInput = evdev.uinput.create
 ---local ui = assert(UInput())
----
 ---local delay, period, err = ui:get_repeat()
 ---assert(delay, err)
 ---print(delay, period)
