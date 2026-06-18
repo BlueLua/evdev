@@ -1,7 +1,7 @@
 ---@meta evdev.device
 
 ---
----One Linux input event returned by `Device:read()`.
+---A Linux input event.
 ---
 ---@class evdev.event
 ---@field device? evdev.Device
@@ -51,9 +51,7 @@ local Device = {}
 ---Close the device.
 ---
 ---```lua
----local Device = evdev.device.open
 ---local dev = assert(Device("/dev/input/eventX"))
----
 ---print(dev:is_open()) --> true
 ---dev:close()
 ---print(dev:is_open()) --> false
@@ -67,9 +65,7 @@ function Device:close() end
 ---Return whether this device handle still has an open file descriptor.
 ---
 ---```lua
----local Device = evdev.device.open
 ---local dev = assert(Device("/dev/input/eventX"))
----
 ---if dev:is_open()
 ---  then dev:close()
 ---end
@@ -82,9 +78,7 @@ function Device:is_open() end
 ---Return the current auto-repeat delay and period in milliseconds.
 ---
 ---```lua
----local Device = evdev.device.open
 ---local dev = assert(Device("/dev/input/eventX"))
----
 ---local delay, period, err = dev:get_repeat()
 ---assert(delay, err)
 ---print(delay, period)
@@ -93,16 +87,16 @@ function Device:is_open() end
 ---@return integer? delay Initial delay before repeating (milliseconds).
 ---@return integer? period Interval between repeats (milliseconds).
 ---@return string? err Error message on failure.
+---@nodiscard
 function Device:get_repeat() end
 
 ---
 ---Set the auto-repeat delay and period in milliseconds.
 ---
 ---```lua
----local Device = evdev.device.open
 ---local dev = assert(Device("/dev/input/eventX"))
----
 ---local delay, period, err = dev:get_repeat()
+---
 ---assert(delay, err)
 ---print(delay, period)
 ---
@@ -120,9 +114,7 @@ function Device:set_repeat(delay, period) end
 ---Return the underlying Linux file descriptor.
 ---
 ---```lua
----local Device = evdev.device.open
 ---local dev = assert(Device("/dev/input/eventX"))
----
 ---local fd = dev:fd()
 ---print(fd)
 ---```
@@ -135,7 +127,6 @@ function Device:fd() end
 ---Take exclusive control of the input device.
 ---
 ---```lua
----local Device = evdev.device.open
 ---local dev = assert(Device("/dev/input/eventX"))
 ---assert(dev:grab())
 ---```
@@ -148,7 +139,6 @@ function Device:grab() end
 ---Release exclusive control of the input device.
 ---
 ---```lua
----local Device = evdev.device.open
 ---local dev = assert(Device("/dev/input/eventX"))
 ---assert(dev:grab())
 ---assert(dev:ungrab())
@@ -161,13 +151,11 @@ function Device:ungrab() end
 ---
 ---Wait in the kernel until this device has input available.
 ---
----This does not spin the CPU. It returns when `read()` can fetch at least one
+---This does not spin the CPU. It returns when `evdev.device.read()` can fetch at least one
 ---queued event.
 ---
 ---```lua
----local Device = evdev.device.open
 ---local ecodes = evdev.ecodes
----
 ---local dev = assert(Device("/dev/input/eventX"))
 ---
 ----- This is the manual form of `dev:events()`.
@@ -190,9 +178,7 @@ function Device:poll() end
 ---Return an iterator that waits for and yields input events one by one.
 ---
 ---```lua
----local Device = evdev.device.open
 ---local dev = assert(Device("/dev/input/eventX"))
----
 ---for e in dev:events() do
 ---  if e.type == ecodes.EV_KEY then
 ---    print(e.code, e.value)
@@ -200,16 +186,14 @@ function Device:poll() end
 ---end
 ---```
 ---
----@return fun(): evdev.event?
+---@return fun():(ev:evdev.event?)
 function Device:events() end
 
 ---
 ---Read one input event. Returns `nil` when no event is queued.
 ---
 ---```lua
----local Device = evdev.device.open
 ---local dev = assert(Device("/dev/input/eventX"))
----
 ----- This is the manual form of `dev:events()`.
 ---while true do
 ---  if assert(dev:poll()) then
@@ -233,9 +217,7 @@ function Device:read() end
 ---events that were already queued.
 ---
 ---```lua
----local Device = evdev.device.open
 ---local dev = assert(Device("/dev/input/eventX"))
----
 ---assert(dev:grab())
 ----- Move the mouse or press keys during the sleep.
 ---
@@ -250,17 +232,19 @@ function Device:flush() end
 ---
 ---Query and monitor physical Linux input devices.
 ---
+---## Usage
+---
 ---```lua
 ---local evdev = require "evdev"
 ---
------ Find and open the primary keyboard
----local dev = assert(evdev.device.open("/dev/input/event0"))
+----- Open an input device (e.g., event0)
+---local dev = assert(Device("/dev/input/event0"))
 ---print("Opened device: " .. dev.name)
 ---
 ----- Process events in a loop
----for event in dev:events() do
----  if evdev.events.is_press(event) then
----    print("Key Pressed! Code: " .. event.code)
+---for ev in dev:events() do
+---  if evdev.events.is_press(ev) then
+---    print("Key Pressed! Code: " .. ev.code)
 ---  end
 ---end
 ---```
@@ -288,7 +272,6 @@ function M.is_device(value) end
 ---Open an input device by path.
 ---
 ---```lua
----local Device = evdev.device.open
 ---local dev = assert(Device("/dev/input/eventX"))
 ---```
 ---
