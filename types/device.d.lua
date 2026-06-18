@@ -236,6 +236,7 @@ function Device:flush() end
 ---
 ---```lua
 ---local evdev = require "evdev"
+---local Device = evdev.device.open
 ---
 ----- Open an input device (e.g., event0)
 ---local dev = assert(Device("/dev/input/event0"))
@@ -272,7 +273,7 @@ function M.is_device(value) end
 ---Open an input device by path.
 ---
 ---```lua
----local dev = assert(Device("/dev/input/eventX"))
+---local dev = assert(evdev.device.open("/dev/input/eventX"))
 ---```
 ---
 ---@param path evdev.path
