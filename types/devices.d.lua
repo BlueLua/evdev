@@ -3,6 +3,8 @@
 ---
 ---Input device discovery helpers.
 ---
+---## Usage
+---
 ---```lua
 ---local devices = assert(evdev.devices.list_devices())
 ---print(#devices)
