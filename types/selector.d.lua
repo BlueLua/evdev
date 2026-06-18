@@ -97,10 +97,9 @@ function Selector:poll() end
 ---end
 ---```
 ---
----@return fun(): evdev.Device?, evdev.event?
+---@return fun(): (dev: evdev.Device?, ev:evdev.event?)
 ---@nodiscard
 function Selector:events() end
----@return self
 
 ---@class evdev.selector
 ---@overload fun(devices?:evdev.Device[]):(sel:evdev.Selector)
