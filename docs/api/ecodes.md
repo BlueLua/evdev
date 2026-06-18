@@ -3,6 +3,8 @@
 Linux input event code constants used when reading events from `/dev/input` or
 emitting events through `uinput`.
 
+## Usage
+
 ```lua
 local evdev = require "evdev"
 
