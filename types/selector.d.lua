@@ -11,9 +11,6 @@ local Selector = {}
 ---Add a device to this selector.
 ---
 ---```lua
----local Device = evdev.device.open
----local Selector = evdev.selector.new
----
 ---local kb1 = assert(Device("/dev/input/event5"))
 ---local kb2 = assert(Device("/dev/input/event10"))
 ---local sel = Selector({ kb1 })
@@ -29,9 +26,6 @@ function Selector:add(device) end
 ---Remove a device from this selector.
 ---
 ---```lua
----local Device = evdev.device.open
----local Selector = evdev.selector.new
----
 ---local kb1 = assert(Device("/dev/input/event5"))
 ---local kb2 = assert(Device("/dev/input/event10"))
 ---local sel = Selector({ kb1, kb2 })
@@ -47,9 +41,6 @@ function Selector:remove(device) end
 ---Remove all devices from this selector.
 ---
 ---```lua
----local Device = evdev.device.open
----local Selector = evdev.selector.new
----
 ---local kb1 = assert(Device("/dev/input/event5"))
 ---local kb2 = assert(Device("/dev/input/event10"))
 ---local sel = Selector({ kb1, kb2 })
@@ -64,9 +55,6 @@ function Selector:clear() end
 ---Wait until at least one registered device has input available.
 ---
 ---```lua
----local Device = evdev.device.open
----local Selector = evdev.selector.new
----
 ---local kb1 = assert(Device("/dev/input/event5"))
 ---local kb2 = assert(Device("/dev/input/event10"))
 ---local sel = Selector({ kb1, kb2 })
@@ -85,9 +73,6 @@ function Selector:poll() end
 ---Return an iterator that yields events from registered devices.
 ---
 ---```lua
----local Device = evdev.device.open
----local Selector = evdev.selector.new
----
 ---local kb1 = assert(Device("/dev/input/event5"))
 ---local kb2 = assert(Device("/dev/input/event10"))
 ---local sel = Selector({ kb1, kb2 })
@@ -101,6 +86,26 @@ function Selector:poll() end
 ---@nodiscard
 function Selector:events() end
 
+---
+---Monitor and read events from multiple input devices.
+---
+---## Usage
+---
+---```lua
+---local evdev = require "evdev"
+---
+---local Device = evdev.device.open
+---local Selector = evdev.selector.new
+---
+---local dev1 = assert(Device("/dev/input/eventX"))
+---local dev2 = assert(Device("/dev/input/eventY"))
+---local sel = Selector({ dev1, dev2 })
+---
+---for dev, ev in sel:events() do
+---  print(dev.name, ev.code, ev.value)
+---end
+---```
+---
 ---@class evdev.selector
 ---@overload fun(devices?:evdev.Device[]):(sel:evdev.Selector)
 local M = {}
@@ -109,10 +114,6 @@ local M = {}
 ---Create a selector from an optional list of devices.
 ---
 ---```lua
----local evdev = require "evdev"
----local Device = evdev.device.open
----local Selector = evdev.selector.new
----
 ---local kb1 = assert(Device("/dev/input/event5"))
 ---local kb2 = assert(Device("/dev/input/event10"))
 ---local sel = Selector({ kb1, kb2 })
