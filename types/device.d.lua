@@ -4,12 +4,12 @@
 ---A Linux input event.
 ---
 ---@class evdev.event
----@field device? evdev.Device
----@field type evdev.ecodes.ev
----@field code integer
----@field value evdev.eventValue
----@field sec? integer
----@field usec? integer
+---@field device? evdev.Device The Device object that produced this event.
+---@field type evdev.ecodes.ev Event type, e.g. `EV_KEY`.
+---@field code integer Key/button/axis code, e.g. `KEY_A`.
+---@field value evdev.eventValue Event value, e.g. `0` = release, `1` = press, `2` = repeat.
+---@field sec? integer Timestamp seconds.
+---@field usec? integer Timestamp microseconds.
 
 ---
 ---Input device metadata.
