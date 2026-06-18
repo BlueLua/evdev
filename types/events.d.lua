@@ -3,6 +3,8 @@
 ---
 ---Event value constants and event predicates.
 ---
+---## Usage
+---
 ---```lua
 ---local e = {
 ---  type = evdev.ecodes.EV_KEY,
