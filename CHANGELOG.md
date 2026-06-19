@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/BlueLua/evdev/compare/v0.2.0...v0.3.0) (2026-06-19)
+
+
+### Features
+
+* **ecodes:** update event codes to latest Linux kernel ([#7](https://github.com/BlueLua/evdev/issues/7)) ([a3f7f86](https://github.com/BlueLua/evdev/commit/a3f7f860bfc0ce57d6c96921ad1e43dcc87e36b5))
+
 ## [0.2.0](https://github.com/BlueLua/evdev/compare/v0.1.0...v0.2.0) (2026-06-04)
 
 
