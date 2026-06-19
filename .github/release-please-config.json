@@ -1,7 +1,9 @@
 {
-  "release-type": "simple",
-  "initial-version": "0.1.0",
   "packages": {
-    ".": {}
+    ".": {
+      "release-type": "simple",
+      "initial-version": "0.1.0",
+      "extra-files": ["src/init.lua", "types/evdev.d.lua"]
+    }
   }
 }
