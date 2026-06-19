@@ -34,5 +34,14 @@ build = {
         "src/evdev/uinput.c",
       },
     },
+    ["evdev.types/evdev"] = "types/evdev.d.lua",
+    ["evdev.types/_enums"] = "types/_enums.d.lua",
+    ["evdev.types/device"] = "types/device.d.lua",
+    ["evdev.types/devices"] = "types/devices.d.lua",
+    ["evdev.types/ecodes"] = "types/ecodes.d.lua",
+    ["evdev.types/events"] = "types/events.d.lua",
+    ["evdev.types/selector"] = "types/selector.d.lua",
+    ["evdev.types/uinput"] = "types/uinput.d.lua",
   },
 }
+
