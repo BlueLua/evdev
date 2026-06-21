@@ -164,8 +164,8 @@ describe("evdev.selector", function()
       end
 
       local events = sel:events()
-      local dev1, event1 = events()
-      local dev2, event2 = events()
+      local dev1, event1 = assert(events())
+      local dev2, event2 = assert(events())
 
       first:close()
       second:close()
@@ -196,7 +196,7 @@ describe("evdev.selector", function()
         }
       end
 
-      local dev, event = sel:events()()
+      local dev, event = assert(sel:events()())
 
       first:close()
       second:close()
