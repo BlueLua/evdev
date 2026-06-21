@@ -24,6 +24,10 @@ on:
         description: "Markdownlint"
         type: boolean
         default: false
+      prettier:
+        description: "Prettier"
+        type: boolean
+        default: false
       tests:
         description: "Tests"
         type: boolean
