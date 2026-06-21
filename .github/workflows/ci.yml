@@ -72,6 +72,7 @@ jobs:
       luacheck:            ${{ inputs.luacheck            || false }}
       lua-language-server: ${{ inputs.lua-language-server || false }}
       markdownlint:        ${{ inputs.markdownlint        || false }}
+      prettier:            ${{ inputs.prettier            || false }}
 
       release-please:  ${{ inputs.release-please  || false }}
       publish-dev:     ${{ inputs.publish-dev     || false }}
