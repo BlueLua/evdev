@@ -115,6 +115,7 @@ describe("evdev.devices", function()
     it("finds a device by by-id alias when present", function()
       local dev_with_alias = find_by_id(devs)
       if not dev_with_alias then
+        ---@diagnostic disable-next-line: missing-parameter
         pending("no discovered device with a by-id alias")
       end
 
@@ -126,6 +127,7 @@ describe("evdev.devices", function()
     it("finds a device by by-path alias when present", function()
       local dev_with_alias = find_by_path(devs)
       if not dev_with_alias then
+        ---@diagnostic disable-next-line: missing-parameter
         pending("no discovered device with a by-path alias")
       end
 
@@ -168,6 +170,7 @@ describe("evdev.devices", function()
     it("finds a device by by-id alias when present", function()
       local dev_with_alias = find_by_id(devs)
       if not dev_with_alias then
+        ---@diagnostic disable-next-line: missing-parameter
         pending("no discovered device with a by-id alias")
       end
 
@@ -180,6 +183,7 @@ describe("evdev.devices", function()
     it("finds a device by by-path alias when present", function()
       local dev_with_alias = find_by_path(devs)
       if not dev_with_alias then
+        ---@diagnostic disable-next-line: missing-parameter
         pending("no discovered device with a by-path alias")
       end
 
