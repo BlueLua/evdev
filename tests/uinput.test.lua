@@ -196,7 +196,7 @@ describe("evdev.uinput()", function()
     it("loads metadata fields", function()
       local name = "Lua Virtual Device"
       ui = assert(UInput({ name = name }))
-      assert.Match("^/dev/input/event%d+$", ui.path)
+      assert.match("^/dev/input/event%d+$", ui.path)
       assert.Equal(name, ui.name)
     end)
 
