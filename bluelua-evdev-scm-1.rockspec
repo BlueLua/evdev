@@ -1,4 +1,4 @@
-package = "evdev"
+package = "bluelua-evdev"
 version = "scm-1"
 
 source = {
@@ -24,7 +24,7 @@ build = {
     ["evdev"] = "src/evdev/init.lua",
     ["evdev.selector"] = "src/evdev/selector.lua",
     ["evdev.uinput"] = "src/evdev/uinput.lua",
-    ["evdev._core"] = {
+    ["bluelua-evdev._core"] = {
       sources = {
         "src/evdev/device.c",
         "src/evdev/devices.c",
@@ -34,13 +34,13 @@ build = {
         "src/evdev/util.c",
       },
     },
-    ["evdev.types/_enums"] = "types/_enums.d.lua",
-    ["evdev.types/device"] = "types/device.d.lua",
-    ["evdev.types/devices"] = "types/devices.d.lua",
-    ["evdev.types/ecodes"] = "types/ecodes.d.lua",
-    ["evdev.types/evdev"] = "types/evdev.d.lua",
-    ["evdev.types/events"] = "types/events.d.lua",
-    ["evdev.types/selector"] = "types/selector.d.lua",
-    ["evdev.types/uinput"] = "types/uinput.d.lua",
+    ["bluelua-evdev.types/_enums"] = "types/_enums.d.lua",
+    ["bluelua-evdev.types/device"] = "types/device.d.lua",
+    ["bluelua-evdev.types/devices"] = "types/devices.d.lua",
+    ["bluelua-evdev.types/ecodes"] = "types/ecodes.d.lua",
+    ["bluelua-evdev.types/evdev"] = "types/evdev.d.lua",
+    ["bluelua-evdev.types/events"] = "types/events.d.lua",
+    ["bluelua-evdev.types/selector"] = "types/selector.d.lua",
+    ["bluelua-evdev.types/uinput"] = "types/uinput.d.lua",
   },
 }
