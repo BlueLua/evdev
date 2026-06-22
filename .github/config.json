@@ -1,5 +1,5 @@
 {
   "package": "bluelua-evdev",
   "os": ["linux"],
-  "version-files":  ["src/evdev/init.lua", "types/evdev.d.lua"]
+  "version-files": ["src/evdev/init.lua", "types/evdev.d.lua"]
 }
