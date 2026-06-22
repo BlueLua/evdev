@@ -8,10 +8,10 @@ on:
     branches: [main]
   workflow_dispatch:
     inputs:
-      stylua:
-        description: "StyLua"
+      test:
+        description: "Test"
         type: boolean
-        default: false
+        default: true
       luacheck:
         description: "Luacheck"
         type: boolean
@@ -22,18 +22,6 @@ on:
         default: false
       markdownlint:
         description: "Markdownlint"
-        type: boolean
-        default: false
-      prettier:
-        description: "Prettier"
-        type: boolean
-        default: false
-      shfmt:
-        description: "shfmt"
-        type: boolean
-        default: false
-      tests:
-        description: "Tests"
         type: boolean
         default: false
       release-please:
@@ -57,28 +45,13 @@ jobs:
   ci:
     uses: BlueLua/.github/.github/workflows/ci.yml@main
     secrets: inherit
-    # prettier-ignore
     with:
-      run: |
-        echo 'KERNEL=="event*", SUBSYSTEM=="input", MODE="0666"' | sudo tee /etc/udev/rules.d/99-evdev-test.rules
-        sudo udevadm control --reload-rules
-        sudo modprobe uinput || true
-        sudo udevadm trigger --subsystem-match=input || true
-        test -e /dev/uinput
-        sudo chmod 666 /dev/uinput
+      test-linux: ${{ github.event_name == 'workflow_dispatch' && inputs.test || true }}
 
-      linux:   true
-      macos:   false
-      windows: false
-
-      tests:               ${{ inputs.tests               || false }}
-      stylua:              ${{ inputs.stylua              || false }}
-      luacheck:            ${{ inputs.luacheck            || false }}
+      luacheck: ${{ inputs.luacheck || false }}
       lua-language-server: ${{ inputs.lua-language-server || false }}
-      markdownlint:        ${{ inputs.markdownlint        || false }}
-      prettier:            ${{ inputs.prettier            || false }}
-      shfmt:               ${{ inputs.shfmt               || false }}
+      markdownlint: ${{ inputs.markdownlint || false }}
 
-      release-please:  ${{ inputs.release-please  || false }}
-      publish-dev:     ${{ inputs.publish-dev     || false }}
+      release-please: ${{ inputs.release-please || false }}
+      publish-dev: ${{ inputs.publish-dev || false }}
       publish-release: ${{ inputs.publish-release || false }}

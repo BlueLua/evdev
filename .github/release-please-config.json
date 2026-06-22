@@ -3,7 +3,7 @@
     ".": {
       "release-type": "simple",
       "initial-version": "0.1.0",
-      "extra-files": ["src/evdev/init.lua", "types/evdev.d.lua"]
+      "extra-files": []
     }
   }
 }

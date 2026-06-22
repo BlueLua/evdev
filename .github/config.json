@@ -1,0 +1,5 @@
+{
+  "package": "evdev",
+  "os": ["linux"],
+  "version-files": []
+}
