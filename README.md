@@ -8,6 +8,8 @@
 
 Lua bindings for Linux evdev input devices and /dev/uinput virtual devices.
 
+Check out the [documentation] for guides and examples.
+
 ## ✨ Features
 
 - **Device Discovery**: List and search for connected input devices by name,
@@ -39,3 +41,5 @@ for event in dev:events() do
   end
 end
 ```
+
+[documentation]: https://bluelua.github.io/evdev
