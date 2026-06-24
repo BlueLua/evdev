@@ -1,4 +1,4 @@
-# bluelua-evdev
+# evdev
 
 [![Test](https://img.shields.io/github/actions/workflow/status/BlueLua/evdev/test.yml?branch=main&label=test&style=flat-square)](https://github.com/BlueLua/evdev/actions/workflows/test.yml)
 [![LuaRocks](https://img.shields.io/luarocks/v/BlueLua/bluelua-evdev?color=blue&style=flat-square)](https://luarocks.org/modules/BlueLua/bluelua-evdev)
